@@ -18,8 +18,8 @@ Redmine::Plugin.register :wiking_plugin do
     name 'WikiNG'
     author 'Andriy Lesyuk'
     author_url 'http://www.andriylesyuk.com/'
-    # TODO: description '...'
-    # TODO: url 'http://projects.andriylesyuk.com/projects/wiking'
+    description 'Wiki Next Generation plugin extends Redmine Wiki syntax.'
+    url 'http://projects.andriylesyuk.com/projects/wiking'
     version '0.0.1'
 end
 
@@ -39,7 +39,7 @@ Redmine::WikiFormatting::Macros.register do
                 end
             end
 
-            call_hook("wiking_hook_#{hook}", { :page => page, :args => params, :options => options }) # FIXME: test
+            call_hook("wiking_hook_#{hook}", { :page => page, :args => params, :options => options })
         end
     end
 end

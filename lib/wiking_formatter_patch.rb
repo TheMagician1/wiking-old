@@ -59,8 +59,6 @@ module WikingFormatterPatch
             end
         end
 
-        # TODO: support just ")"?
-
         WIKING_SMILEY_RE = {
             'smiley'      => ':-?\)',                  # :)
             'smiley2'     => '=-?\)',                  # =)
@@ -85,9 +83,14 @@ module WikingFormatterPatch
         }
 
         def inline_wiking_smileys(text)
-            WIKING_SMILEY_RE.each do |name, regexp| # TODO: support ! to disable
-                text.gsub!(%r{(#{regexp})}) do |match| # FIXME: inside [...] ?
-                    "<span class=\"wiking smiley smiley-#{name}\"></span>"
+            WIKING_SMILEY_RE.each do |name, regexp|
+                text.gsub!(%r{(!)?(#{regexp})}) do |match|
+                    esc, smiley = $1, $2
+                    if esc.nil?
+                        "<span class=\"wiking smiley smiley-#{name}\"></span>"
+                    else
+                        smiley
+                    end
                 end
             end
         end
