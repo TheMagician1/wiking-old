@@ -1,0 +1,153 @@
+.wiki div.wiking.flash {
+    border-width: 1px;
+    background-position: 6px 3px;
+    width: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+.wiki div.wiking.notice {
+    background-image: url(../../../plugin_assets/wiking/images/notice.png);
+    background-color: #c5e7f8;
+    border-color: #759fcf;
+    color: #00365f;
+}
+.wiki div.wiking.tip {
+    background-image: url(../../../plugin_assets/wiking/images/tip.png);
+    background-repeat: no-repeat;
+    background-color: #eee;
+    border-color: #bbb;
+}
+.wiki span.wiking.marker {
+    background-repeat: no-repeat;
+    display: inline-block;
+}
+.wiki span.wiking.marker-left,
+.wiki span.wiking.marker-right {
+    margin-bottom: 0.5em;
+}
+.wiki span.wiking.marker-left {
+    margin-right: 0.5em;
+    float: left;
+}
+.wiki span.wiking.marker-right {
+    margin-left: 0.5em;
+    float: right;
+}
+.wiki span.wiking.marker-super {
+    margin-bottom: 0.25em;
+}
+.wiki span.wiking.marker-todo {
+    background-image: url(../../../plugin_assets/wiking/images/todo.png);
+    width: 82px;
+    height: 24px;
+}
+.wiki span.wiking.marker-fixme {
+    background-image: url(../../../plugin_assets/wiking/images/fixme.png);
+    width: 83px;
+    height: 24px;
+}
+.wiki span.wiking.marker-update {
+    background-image: url(../../../plugin_assets/wiking/images/update.png);
+    width: 96px;
+    height: 24px;
+}
+.wiki span.wiking.marker-new {
+    background-image: url(../../../plugin_assets/wiking/images/new-text.png);
+    width: 23px;
+    height: 11px;
+}
+.wiki span.marker-new.marker-left,
+.wiki span.marker-new.marker-right {
+    background-image: url(../../../plugin_assets/wiking/images/new.png);
+    width: 48px;
+    height: 48px;
+}
+.wiki span.marker-new.marker-super {
+    background-image: url(../../../plugin_assets/wiking/images/new-super.png);
+    width: 28px;
+    height: 9px;
+}
+.wiki span.wiking.marker-free {
+    background-image: url(../../../plugin_assets/wiking/images/free-text.png);
+    width: 24px;
+    height: 24px;
+}
+.wiki span.marker-free.marker-left,
+.wiki span.marker-free.marker-right {
+    background-image: url(../../../plugin_assets/wiking/images/free.png);
+    width: 48px;
+    height: 48px;
+}
+.wiki span.marker-free.marker-super {
+    background-image: url(../../../plugin_assets/wiking/images/free-super.png);
+    width: 16px;
+    height: 16px;
+}
+.wiki span.wiking.smiley {
+    background-repeat: no-repeat;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+}
+.wiki span.wiking.smiley-smiley {
+    background-image: url(../../../plugin_assets/wiking/images/smileys/smiley.png);
+}
+.wiki span.wiking.smiley-smiley2 {
+    background-image: url(../../../plugin_assets/wiking/images/smileys/smiley2.png);
+}
+.wiki span.wiking.smiley-laughing {
+    background-image: url(../../../plugin_assets/wiking/images/smileys/smiley-grin.png);
+}
+.wiki span.wiking.smiley-laughing2 {
+    background-image: url(../../../plugin_assets/wiking/images/smileys/smiley-laughing2.png);
+}
+.wiki span.wiking.smiley-crying {
+    background-image: url(../../../plugin_assets/wiking/images/smileys/smiley-cry.png);
+}
+.wiki span.wiking.smiley-sad {
+    background-image: url(../../../plugin_assets/wiking/images/smileys/smiley-sad.png);
+}
+.wiki span.wiking.smiley-wink {
+    background-image: url(../../../plugin_assets/wiking/images/smileys/smiley-wink.png);
+}
+.wiki span.wiking.smiley-cheeky {
+    background-image: url(../../../plugin_assets/wiking/images/smileys/smiley-razz.png);
+}
+.wiki span.wiking.smiley-shock {
+    background-image: url(../../../plugin_assets/wiking/images/smileys/smiley-eek.png);
+}
+.wiki span.wiking.smiley-annoyed {
+    background-image: url(../../../plugin_assets/wiking/images/smileys/smiley-annoyed.png);
+}
+.wiki span.wiking.smiley-confuse {
+    background-image: url(../../../plugin_assets/wiking/images/smileys/smiley-confuse.png);
+}
+.wiki span.wiking.smiley-straight {
+    background-image: url(../../../plugin_assets/wiking/images/smileys/smiley-neutral.png);
+}
+.wiki span.wiking.smiley-embarrassed {
+    background-image: url(../../../plugin_assets/wiking/images/smileys/smiley-red.png);
+}
+.wiki span.wiking.smiley-kiss {
+    background-image: url(../../../plugin_assets/wiking/images/smileys/smiley-kiss.png);
+}
+.wiki span.wiking.smiley-angel {
+    background-image: url(../../../plugin_assets/wiking/images/smileys/smiley-angel.png);
+}
+.wiki span.wiking.smiley-evil {
+    background-image: url(../../../plugin_assets/wiking/images/smileys/smiley-evil.png);
+}
+.wiki span.wiking.smiley-rock {
+    background-image: url(../../../plugin_assets/wiking/images/smileys/smiley-cool.png);
+}
+.wiki span.wiking.smiley-rose {
+    background-image: url(../../../plugin_assets/wiking/images/smileys/rose.png);
+    width: 24px;
+    height: 24px;
+}
+.wiki span.wiking.smiley-exclamation {
+    background-image: url(../../../plugin_assets/wiking/images/smileys/exclamation-red-frame.png);
+}
+.wiki span.wiking.smiley-question {
+    background-image: url(../../../plugin_assets/wiking/images/smileys/question-frame.png);
+}

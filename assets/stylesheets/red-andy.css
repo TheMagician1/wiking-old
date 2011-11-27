@@ -1,0 +1,29 @@
+.controller-wiki .wiki div.wiking ul {
+    margin: 0.5em;
+}
+.controller-wiki .wiki div.wiking li {
+    margin: 0;
+}
+.wiki div.wiking.flash {
+    -moz-box-shadow: 1px 2px 2px #b4b4b4;
+    box-shadow: 1px 2px 2px #b4b4b4;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    margin: 1em 0;
+}
+.wiki div.wiking.warning {
+    background-position: 6px 4px;
+}
+.wiki div.wiking.notice {
+    background-image: url(../../../plugin_assets/wiking/images/red-andy/notice.png);
+    background-position: 6px 5px;
+    background-color: #e9facd;
+    border-color: #b8d573;
+    color: #005f00;
+}
+.wiki div.wiking.tip {
+    background-image: url(../../../plugin_assets/wiking/images/notice.png);
+    background-color: #ddedf2;
+    border-color: #759fcf;
+    color: #00365f;
+}
