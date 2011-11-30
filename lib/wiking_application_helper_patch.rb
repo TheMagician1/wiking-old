@@ -8,6 +8,7 @@ module WikingApplicationHelperPatch
         base.class_eval do
             unloadable
             alias_method_chain :textilizable,        :wiking
+            alias_method_chain :parse_wiki_links,    :wiking
             alias_method_chain :parse_redmine_links, :wiking
         end
     end
@@ -20,7 +21,7 @@ module WikingApplicationHelperPatch
         LT = "&lt;"
         GT = "&gt;"
 
-        WIKING_CONDITION_RE = %r{!?\((date|version)\s*((?:[<=>]|#{LT}|#{GT})=?)\s*([^\)]+)\)(.*?)\(\1\)}m
+        WIKING_CONDITION_RE = %r{!?\{\{(date|version)\s*((?:[<=>]|#{LT}|#{GT})=?)\s*([^\}]+)\}\}(.*?)\{\{\1\}\}}m
 
         def textilizable_with_wiking(*args)
             text = textilizable_without_wiking(*args)
@@ -91,6 +92,49 @@ module WikingApplicationHelperPatch
             end
 
             text
+        end
+
+        WIKING_LINK_RE = %r{(!)?(\[\[(wikipedia|google|redmine|chiliproject)(?:\[([^\]])\])?>([^\]\n\|]+)(?:\|([^\]\n\|]+))?\]\])}
+
+        def parse_wiki_links_with_wiking(text, project, obj, attr, only_path, options)
+
+            # External links:
+            #   [[wikipedia>Ruby (programming language)#Features|Ruby]] -> Link to Wikipedia page describing Ruby language
+            #   [[google>Redmine Wiki|check search results]] -> Link to google search results for "Redmine Wiki"
+            text.gsub!(WIKING_LINK_RE) do |m|
+                esc, all, resource, option, page, title = $1, $2, $3, $4, $5, $6
+                if esc.nil?
+                    title ||= page
+                    case resource
+                    when 'wikipedia'
+                        lang = (option || 'en')
+                        if page =~ %r{^(.+?)#(.*)$}
+                            page, anchor = $1, $2
+                        end
+                        page = URI.escape(page.gsub(%r{\s}, '_'))
+                        page << '#' + URI.escape(anchor) if anchor
+                        link_to(h(title), "http://#{URI.escape(lang)}.wikipedia.org/wiki/#{page}", :class => 'wiking external wiking-wikipedia') # FIXME: style
+                    when 'google'
+                        link_to(h(title), "http://www.google.com/search?q=#{URI.escape(page)}", :class => 'wiking external wiking-google') # FIXME: style
+                    when 'redmine', 'chiliproject'
+                        if page =~ %r{^#([0-9]+)$}
+                            page = $1
+                            link_to(h(title), "http://www.#{resource}.org/issues/#{page}", :class => "wiking external wiking-#{resource} wiking-issue")
+                        else
+                            if page =~ %r{^(.+?)#(.*)$}
+                                page, anchor = $1, $2
+                            end
+                            page = URI.escape(page)
+                            page << '#' + URI.escape(anchor) if anchor
+                            link_to(h(title), "http://www.#{resource}.org/projects/#{resource}/wiki/#{page}", :class => "wiking external wiking-#{resource}")
+                        end
+                    end
+                else
+                    all
+                end
+            end
+
+            parse_wiki_links_without_wiking(text, project, obj, attr, only_path, options)
         end
 
         WIKING_USER_RE = %r{([\s\(,\-\[\>]|^)(!)?(user)(\(([^\)]+?)\))?(?:(#)(\d+)|(:)([^"\s<>][^\s<>]*?|"[^"]+?"))(?=(?=[[:punct:]]\W)|,|\s|\]|<|$)}

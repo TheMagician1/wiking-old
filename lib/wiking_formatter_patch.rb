@@ -68,7 +68,7 @@ module WikingFormatterPatch
             'sad'         => '[=8:]-?\(',              # :(
             'wink'        => ';-?[)D]',                # ;)
             'cheeky'      => '[=8:]-?[Ppb]',           # :P
-            'shock'       => '[=8:]-?[Oo0]',           # :O
+            'shock'       => '[=8:]-?[Oo0]',           # :O # FIXME: :redsh#...
             'annoyed'     => '[=8:]-?[\\/]',           # :/
             'confuse'     => '[=8:]-?S',               # :S
             'straight'    => '[=8:]-?\|',              # :|
