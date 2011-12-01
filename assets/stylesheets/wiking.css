@@ -38,18 +38,18 @@
 }
 .wiki span.wiking.marker-todo {
     background-image: url(../../../plugin_assets/wiking/images/todo.png);
-    width: 82px;
-    height: 24px;
+    width: 72px;
+    height: 20px;
 }
 .wiki span.wiking.marker-fixme {
     background-image: url(../../../plugin_assets/wiking/images/fixme.png);
-    width: 83px;
-    height: 24px;
+    width: 77px;
+    height: 20px;
 }
 .wiki span.wiking.marker-update {
     background-image: url(../../../plugin_assets/wiking/images/update.png);
-    width: 96px;
-    height: 24px;
+    width: 87px;
+    height: 20px;
 }
 .wiki span.wiking.marker-new {
     background-image: url(../../../plugin_assets/wiking/images/new-text.png);
