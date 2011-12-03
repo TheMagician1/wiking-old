@@ -20,7 +20,7 @@ Redmine::Plugin.register :wiking_plugin do
     author_url 'http://www.andriylesyuk.com/'
     description 'Wiki Next Generation plugin extends Redmine Wiki syntax.'
     url 'http://projects.andriylesyuk.com/projects/wiking'
-    version '0.0.1'
+    version '0.0.1b'
 end
 
 Redmine::WikiFormatting::Macros.register do

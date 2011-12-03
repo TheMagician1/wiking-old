@@ -113,9 +113,9 @@ module WikingApplicationHelperPatch
                         end
                         page = URI.escape(page.gsub(%r{\s}, '_'))
                         page << '#' + URI.escape(anchor) if anchor
-                        link_to(h(title), "http://#{URI.escape(lang)}.wikipedia.org/wiki/#{page}", :class => 'wiking external wiking-wikipedia') # FIXME: style
+                        link_to(h(title), "http://#{URI.escape(lang)}.wikipedia.org/wiki/#{page}", :class => 'wiking external wiking-wikipedia')
                     when 'google'
-                        link_to(h(title), "http://www.google.com/search?q=#{URI.escape(page)}", :class => 'wiking external wiking-google') # FIXME: style
+                        link_to(h(title), "http://www.google.com/search?q=#{URI.escape(page)}", :class => 'wiking external wiking-google')
                     when 'redmine', 'chiliproject'
                         if page =~ %r{^#([0-9]+)$}
                             page = $1

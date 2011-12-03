@@ -55,7 +55,7 @@ module WikingFormatterPatch
                         class_name = ''
                     end
                 end
-                "<span class=\"wiking marker marker-#{marker.downcase} #{class_name}\"></span>"
+                "<span class=\"wiking marker marker-#{marker.downcase} #{class_name}\" title=\"#{marker}\"></span>"
             end
         end
 
@@ -63,19 +63,19 @@ module WikingFormatterPatch
             'smiley'      => ':-?\)',                  # :)
             'smiley2'     => '=-?\)',                  # =)
             'laughing'    => ':-?D',                   # :D
-            'laughing2'   => '[=8]-?D',                # =D
-            'crying'      => '[=8:][\'*]\(',           # :'(
-            'sad'         => '[=8:]-?\(',              # :(
+            'laughing2'   => '[=]-?D',                 # =D
+            'crying'      => '[=:][\'*]\(',            # :'(
+            'sad'         => '[=:]-?\(',               # :(
             'wink'        => ';-?[)D]',                # ;)
-            'cheeky'      => '[=8:]-?[Ppb]',           # :P
-            'shock'       => '[=8:]-?[Oo0]',           # :O # FIXME: :redsh#...
-            'annoyed'     => '[=8:]-?[\\/]',           # :/
-            'confuse'     => '[=8:]-?S',               # :S
-            'straight'    => '[=8:]-?\|',              # :|
-            'embarrassed' => '[=8:]-?[Xx]',            # :X
-            'kiss'        => '[=8:]-?\*',              # :*
-            'angel'       => '[Oo][=8:]-?\)',          # O:)
-            'evil'        => '>[=8:;]-?[)(]',          # >:)
+            'cheeky'      => '[=:]-?[Ppb]',            # :P
+            'shock'       => '[=:]-?[Oo0]',            # :O
+            'annoyed'     => '[=:]-?[\\/]',            # :/
+            'confuse'     => '[=:]-?S',                # :S
+            'straight'    => '[=:]-?\|',               # :|
+            'embarrassed' => '[=:]-?[Xx]',             # :X
+            'kiss'        => '[=:]-?\*',               # :*
+            'angel'       => '[Oo][=:]-?\)',           # O:)
+            'evil'        => '>[=:;]-?[)(]',           # >:)
             'rock'        => 'B-?\)',                  # B)
             'rose'        => '@[)\}][-\\/\',;()>\}]*', # @}->-
             'exclamation' => '[\[(]![\])]',            # (!)
