@@ -148,7 +148,7 @@ module WikingApplicationHelperPatch
             #   user:"s-andy" -> Link to user with username "s-andy"
             #   user(me)#1 | user(me):s-andy -> Display "me" instead of firstname and lastname
             text.gsub!(WIKING_USER_RE) do |m|
-                leading, esc, prefix, display, sep, identifier = $1, $2, $3, $5, $6 || $8, $7 || $9
+                leading, esc, prefix, option, display, sep, identifier = $1, $2, $3, $4, $5, $6 || $8, $7 || $9
                 link = nil
                 if esc.nil?
                     if sep == '#'
@@ -181,7 +181,7 @@ module WikingApplicationHelperPatch
                         end
                     end
                 end
-                leading + (link || "#{prefix}#{display}#{sep}#{identifier}")
+                leading + (link || "#{prefix}#{option}#{sep}#{identifier}")
             end
 
         end
