@@ -151,19 +151,24 @@
 .wiki span.wiking.smiley-question {
     background-image: url(../../../plugin_assets/wiking/images/smileys/question-frame.png);
 }
-.wiki .external.wiking-google {
+.wiking.external {
+    background-repeat: no-repeat;
+    background-position: 0% 60%;
+    padding-left: 12px;
+}
+.wiki .external.wiking-google, .external.wiking-google {
     background-image: url(../../../plugin_assets/wiking/images/link-google.png);
     background-position: 0% 50%;
     padding-left: 13px;
 }
-.wiki .external.wiking-wikipedia {
+.wiki .external.wiking-wikipedia, .external.wiking-wikipedia {
     background-image: url(../../../plugin_assets/wiking/images/link-wikipedia.png);
 }
-.wiki .external.wiking-redmine {
+.wiki .external.wiking-redmine, .external.wiking-redmine {
     background-image: url(../../../plugin_assets/wiking/images/link-redmine.png);
     background-position: 0% 40%;
 }
-.wiki .external.wiking-chiliproject {
+.wiki .external.wiking-chiliproject, .external.wiking-chiliproject {
     background-image: url(../../../plugin_assets/wiking/images/link-chiliproject.png);
     padding-left: 11px;
 }
