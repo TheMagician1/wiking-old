@@ -167,6 +167,7 @@
 .wiki .external.wiking-redmine, .external.wiking-redmine {
     background-image: url(../../../plugin_assets/wiking/images/link-redmine.png);
     background-position: 0% 40%;
+    padding-left: 13px;
 }
 .wiki .external.wiking-chiliproject, .external.wiking-chiliproject {
     background-image: url(../../../plugin_assets/wiking/images/link-chiliproject.png);
