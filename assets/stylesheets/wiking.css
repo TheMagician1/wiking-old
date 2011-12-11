@@ -5,6 +5,10 @@
     overflow-x: auto;
     overflow-y: hidden;
 }
+.wiki div.wiking.warning {
+    background-image: url(../../../plugin_assets/wiking/images/warning.png);
+    color: #863D09;
+}
 .wiki div.wiking.notice {
     background-image: url(../../../plugin_assets/wiking/images/notice.png);
     background-color: #c5e7f8;
