@@ -84,7 +84,7 @@ module WikingFormatterPatch
 
         def inline_wiking_smileys(text)
             WIKING_SMILEY_RE.each do |name, regexp|
-                text.gsub!(%r{(\s|^)(!)?(#{regexp})(?=\W|$)}) do |match|
+                text.gsub!(%r{(\s|>|^)(!)?(#{regexp})(?=\W|$)}m) do |match|
                     leading, esc, smiley = $1, $2, $3
                     if esc.nil?
                         leading + "<span class=\"wiking smiley smiley-#{name}\"></span>"

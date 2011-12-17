@@ -4,6 +4,7 @@
     width: auto;
     overflow-x: auto;
     overflow-y: hidden;
+    font-size: 10pt;
 }
 .wiki div.wiking.warning {
     background-image: url(../../../plugin_assets/wiking/images/warning.png);

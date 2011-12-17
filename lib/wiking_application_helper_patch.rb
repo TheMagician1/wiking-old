@@ -137,7 +137,7 @@ module WikingApplicationHelperPatch
             parse_wiki_links_without_wiking(text, project, obj, attr, only_path, options)
         end
 
-        WIKING_USER_RE = %r{([\s\(,\-\[\>]|^)(!)?(user)(\(([^\)]+?)\))?(?:(#)(\d+)|(:)([^"\s<>][^\s<>]*?|"[^"]+?"))(?=(?=[[:punct:]]\W)|,|\s|\]|<|$)}
+        WIKING_USER_RE = %r{([\s\(,\-\[\>]|^)(!)?(user)(\(([^\)]+?)\))?(?:(#)(\d+)|(:)([^"\s<>][^\s<>]*?|"[^"]+?"))(?=(?=[[:punct:]]\W)|,|\s|\]|<|$)}m
 
         def parse_redmine_links_with_wiking(text, project, obj, attr, only_path, options)
             parse_redmine_links_without_wiking(text, project, obj, attr, only_path, options)
