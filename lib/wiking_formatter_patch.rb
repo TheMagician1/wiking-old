@@ -9,6 +9,9 @@ module WikingFormatterPatch
             self::RULES << :block_wiking_blocks
             self::RULES << :inline_wiking_markers
             self::RULES << :inline_wiking_smileys
+            self::RULES << :inline_dashes
+            self::RULES << :inline_apostrophe
+            self::RULES << :inline_arrows
         end
     end
 
@@ -71,7 +74,7 @@ module WikingFormatterPatch
             'shock'       => '[=:]-?[Oo0]',            # :O
             'annoyed'     => '[=:]-?[\\/]',            # :/
             'confuse'     => '[=:]-?S',                # :S
-            'straight'    => '[=:]-?\|',               # :|
+            'straight'    => '[=:]-?[\|\]]',           # :|
             'embarrassed' => '[=:]-?[Xx]',             # :X
             'kiss'        => '[=:]-?\*',               # :*
             'angel'       => '[Oo][=:]-?\)',           # O:)
@@ -87,10 +90,44 @@ module WikingFormatterPatch
                 text.gsub!(%r{(\s|>|^)(!)?(#{regexp})(?=\W|$)}m) do |match|
                     leading, esc, smiley = $1, $2, $3
                     if esc.nil?
-                        leading + "<span class=\"wiking smiley smiley-#{name}\"></span>"
+                        leading + "<span title=\"#{smiley}\" class=\"wiking smiley smiley-#{name}\"></span>"
                     else
                         leading + smiley
                     end
+                end
+            end
+        end
+
+        def inline_dashes(text)
+            text.gsub!(%r{(-{2,3})}) do |match|
+                case $1
+                when '--'
+                    '&ndash;'
+                else
+                    '&mdash;'
+                end
+            end
+        end
+
+        def inline_apostrophe(text)
+            text.gsub!(%r{(\w)'}) do |match|
+                "#{$1}&rsquo;"
+            end
+        end
+
+        WIKING_ARROWS = {
+            '<=>' => 'hArr',
+            '<->' => 'harr',
+            '<='  => 'lArr',
+            '<-'  => 'larr',
+            '=>'  => 'rArr',
+            '->'  => 'rarr'
+        }
+
+        def inline_arrows(text)
+            WIKING_ARROWS.sort{ |a, b| a[1] <=> b[1] }.each do |code, entity|
+                text.gsub!(%r{#{code}}m) do |match|
+                    "&#{entity};"
                 end
             end
         end
