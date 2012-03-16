@@ -78,7 +78,7 @@ module WikingFormatterPatch
             'embarrassed' => '[=:]-?[Xx]',             # :X
             'kiss'        => '[=:]-?\*',               # :*
             'angel'       => '[Oo][=:]-?\)',           # O:)
-            'evil'        => '>[=:;]-?[)(]',           # >:)
+            'evil'        => '>[=:;]-?[)(]',           # >:) # FIXME: http://projects.andriylesyuk.com/projects/wiking/wiki
             'rock'        => 'B-?\)',                  # B)
             'rose'        => '@[)\}][-\\/\',;()>\}]*', # @}->-
             'exclamation' => '[\[(]![\])]',            # (!)

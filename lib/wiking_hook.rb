@@ -1,4 +1,4 @@
-class SidebarHook  < Redmine::Hook::ViewListener
+class WikiNGHook  < Redmine::Hook::ViewListener
 
     def view_layouts_base_html_head(context = {})
         styles = stylesheet_link_tag('wiking', :plugin => 'wiking')
