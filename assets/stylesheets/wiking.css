@@ -1,3 +1,11 @@
+.jstElements .help {
+    padding: 8px 0 2px 20px;
+    background: url(../../../images/help.png) no-repeat 0 75%;
+}
+.jstElements .help a.help-link {
+    padding: 2px 0;
+    background: none;
+}
 .wiki div.wiking.flash {
     border-width: 1px;
     background-position: 6px 3px;

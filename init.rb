@@ -4,9 +4,14 @@ require_dependency 'wiking_hook'
 
 Rails.logger.info 'Starting WikiNG Plugin for Redmine'
 
+# FIXME: user(Lluís)#456, please try r111
+
 Rails.configuration.to_prepare do
     unless Redmine::WikiFormatting::Textile::Formatter.included_modules.include?(WikingFormatterPatch)
         Redmine::WikiFormatting::Textile::Formatter.send(:include, WikingFormatterPatch)
+    end
+    unless Redmine::WikiFormatting::Textile::Helper.included_modules.include?(WikingWikiHelperPatch)
+        Redmine::WikiFormatting::Textile::Helper.send(:include, WikingWikiHelperPatch)
     end
     unless ApplicationHelper.included_modules.include?(WikingApplicationHelperPatch)
         ApplicationHelper.send(:include, WikingApplicationHelperPatch)
@@ -19,7 +24,7 @@ Redmine::Plugin.register :wiking do
     author_url 'http://www.andriylesyuk.com/'
     description 'Wiki Next Generation plugin extends Redmine Wiki syntax.'
     url 'http://projects.andriylesyuk.com/projects/wiking'
-    version '0.0.1b'
+    version '0.0.2'
 end
 
 Redmine::WikiFormatting::Macros.register do

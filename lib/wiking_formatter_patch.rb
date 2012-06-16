@@ -78,7 +78,7 @@ module WikingFormatterPatch
             'embarrassed' => '[=:]-?[Xx]',             # :X
             'kiss'        => '[=:]-?\*',               # :*
             'angel'       => '[Oo][=:]-?\)',           # O:)
-            'evil'        => '>[=:;]-?[)(]',           # >:) # FIXME: http://projects.andriylesyuk.com/projects/wiking/wiki
+            'evil'        => '>[=:;]-?[)(]',           # >:)
             'rock'        => 'B-?\)',                  # B)
             'rose'        => '@[)\}][-\\/\',;()>\}]*', # @}->-
             'exclamation' => '[\[(]![\])]',            # (!)
@@ -87,7 +87,7 @@ module WikingFormatterPatch
 
         def inline_wiking_smileys(text)
             WIKING_SMILEY_RE.each do |name, regexp|
-                text.gsub!(%r{(\s|>|^)(!)?(#{regexp})(?=\W|$)}m) do |match|
+                text.gsub!(%r{(\s|^)(!)?(#{regexp})(?=\W|$)}m) do |match|
                     leading, esc, smiley = $1, $2, $3
                     if esc.nil?
                         leading + "<span title=\"#{smiley}\" class=\"wiking smiley smiley-#{name}\"></span>"
