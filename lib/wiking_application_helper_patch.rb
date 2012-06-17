@@ -85,7 +85,13 @@ module WikingApplicationHelperPatch
                         end
                     end
 
-                    result ? content : nil
+                    if result
+                        content
+                    elsif User.current.allowed_to?(:view_hidden_content, project)
+                        '<span class="wiking-hidden">' + content + '</span>'
+                    else
+                        nil
+                    end
                 else
                     m[1..-1]
                 end

@@ -6,6 +6,10 @@
     padding: 2px 0;
     background: none;
 }
+.wiki span.wiking-hidden {
+    opacity: 0.25;
+    filter: alpha(opacity=25);
+}
 .wiki div.wiking.flash {
     border-width: 1px;
     background-position: 6px 3px;

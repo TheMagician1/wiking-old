@@ -25,6 +25,10 @@ Redmine::Plugin.register :wiking do
     description 'Wiki Next Generation plugin extends Redmine Wiki syntax.'
     url 'http://projects.andriylesyuk.com/projects/wiking'
     version '0.0.2'
+
+    project_module :wiki do
+        permission :view_hidden_content, {}
+    end
 end
 
 Redmine::WikiFormatting::Macros.register do
