@@ -18,10 +18,10 @@ Rails.configuration.to_prepare do
         ApplicationHelper.send(:include, WikingApplicationHelperPatch)
     end
 
-    if defined? ChiliProject::Liquid::Tags # TODO
-        #require_dependency 'chiliproject/liquid/tags/hook'
+    if defined? ChiliProject::Liquid::Tags
+        require_dependency 'chiliproject/liquid/tags/wiking_liquid_hook'
 
-        #ChiliProject::Liquid::Tags.register_tag('hook', Download, :html => true)
+        ChiliProject::Liquid::Tags.register_tag('hook', WikingLiquidHook, :html => true)
     end
 end
 

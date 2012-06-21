@@ -7,7 +7,7 @@ module WikingApplicationHelperPatch
         base.send(:include, InstanceMethods)
         base.class_eval do
             unloadable
-            alias_method_chain :textilizable,        :wiking
+            alias_method_chain :textilizable,        :wiking unless defined? ChiliProject # FIXME + version
             alias_method_chain :parse_wiki_links,    :wiking
             alias_method_chain :parse_redmine_links, :wiking
         end
@@ -23,7 +23,7 @@ module WikingApplicationHelperPatch
 
         WIKING_CONDITION_RE = %r{!?\{\{(date|version)\s*((?:[<=>]|#{LT}|#{GT})=?)\s*([^\}]+)\}\}(.*?)\{\{\1\}\}}m
 
-        def textilizable_with_wiking(*args) # FIXME: ChiliProject
+        def textilizable_with_wiking(*args)
             text = textilizable_without_wiking(*args)
 
             options = args.last.is_a?(Hash) ? args.pop : {}
