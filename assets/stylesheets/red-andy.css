@@ -15,14 +15,14 @@
     background-position: 6px 4px;
 }
 .wiki div.wiking.notice {
-    background-image: url(../../../plugin_assets/wiking/images/red-andy/notice.png);
+    background-image: url(../images/red-andy/notice.png);
     background-position: 6px 5px;
     background-color: #e9facd;
     border-color: #b8d573;
     color: #005f00;
 }
 .wiki div.wiking.tip {
-    background-image: url(../../../plugin_assets/wiking/images/notice.png);
+    background-image: url(../images/notice.png);
     background-color: #ddedf2;
     border-color: #759fcf;
     color: #00365f;

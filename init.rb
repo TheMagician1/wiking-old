@@ -5,7 +5,7 @@ require_dependency 'wiking_hook'
 Rails.logger.info 'Starting WikiNG Plugin for Redmine'
 
 # FIXME: user(Lluís)#456, please try r111 (TEST)
-# FIXME: Test syntax links (TEST)
+# FIXME: test syntax links (TEST)
 
 Rails.configuration.to_prepare do
     unless Redmine::WikiFormatting::Textile::Formatter.included_modules.include?(WikingFormatterPatch)
