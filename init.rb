@@ -5,6 +5,7 @@ require_dependency 'wiking_hook'
 Rails.logger.info 'Starting WikiNG Plugin for Redmine'
 
 # FIXME: user(Lluís)#456, please try r111 (TEST)
+# FIXME: Test syntax links (TEST)
 
 Rails.configuration.to_prepare do
     unless Redmine::WikiFormatting::Textile::Formatter.included_modules.include?(WikingFormatterPatch)
@@ -15,6 +16,12 @@ Rails.configuration.to_prepare do
     end
     unless ApplicationHelper.included_modules.include?(WikingApplicationHelperPatch)
         ApplicationHelper.send(:include, WikingApplicationHelperPatch)
+    end
+
+    if defined? ChiliProject::Liquid::Tags # TODO
+        #require_dependency 'chiliproject/liquid/tags/hook'
+
+        #ChiliProject::Liquid::Tags.register_tag('hook', Download, :html => true)
     end
 end
 
@@ -31,23 +38,27 @@ Redmine::Plugin.register :wiking do
     end
 end
 
-Redmine::WikiFormatting::Macros.register do
-    desc "Adds new Redmine hook to Wiki page and calls it. Example:\n\n  !{{hook(name, argument=value)}}"
-    macro :hook do |page, args|
-        if args.size > 0
-            hook = args.shift
+unless defined? ChiliProject::Liquid::Tags
 
-            params = []
-            options = {}
-            args.each do |arg|
-                if arg =~ %r{^(.+)\=(.+)$}
-                    options[$1.downcase.to_sym] = $2
-                else
-                    params << arg
+    Redmine::WikiFormatting::Macros.register do
+        desc "Adds new Redmine hook to Wiki page and calls it. Example:\n\n  !{{hook(name, argument=value)}}"
+        macro :hook do |page, args|
+            if args.size > 0
+                hook = args.shift
+
+                params = []
+                options = {}
+                args.each do |arg|
+                    if arg =~ %r{^(.+)\=(.+)$}
+                        options[$1.downcase.to_sym] = $2
+                    else
+                        params << arg
+                    end
                 end
-            end
 
-            call_hook("wiking_hook_#{hook}", { :page => page, :args => params, :options => options })
+                call_hook("wiking_hook_#{hook}", { :page => page, :args => params, :options => options })
+            end
         end
     end
+
 end

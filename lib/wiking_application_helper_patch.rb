@@ -23,7 +23,7 @@ module WikingApplicationHelperPatch
 
         WIKING_CONDITION_RE = %r{!?\{\{(date|version)\s*((?:[<=>]|#{LT}|#{GT})=?)\s*([^\}]+)\}\}(.*?)\{\{\1\}\}}m
 
-        def textilizable_with_wiking(*args)
+        def textilizable_with_wiking(*args) # FIXME: ChiliProject
             text = textilizable_without_wiking(*args)
 
             options = args.last.is_a?(Hash) ? args.pop : {}

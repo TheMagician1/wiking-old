@@ -27,7 +27,11 @@ module WikingWikiHelperPatch
                 @heads_for_wiki_formatter_included = true
             end
 
-            url = "#{Redmine::Utils.relative_url_root}/help/wiki_syntax.html"
+            if defined? ChiliProject
+                url = url_for(:controller => 'help', :action => 'wiki_syntax')
+            else
+                url = "#{Redmine::Utils.relative_url_root}/help/wiki_syntax.html"
+            end
             wiking_url = "#{Redmine::Utils.relative_url_root}/plugin_assets/wiking/help/wiki_syntax.html"
             help_link = l(:setting_text_formatting) + ': ' +
                 link_to(l(:label_help), url, :class => 'help-link',
