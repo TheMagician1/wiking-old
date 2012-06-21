@@ -125,7 +125,7 @@ module WikingApplicationHelperPatch
                     when 'redmine', 'chiliproject'
                         if page =~ %r{^#([0-9]+)$}
                             page = $1
-                            link_to(h(title), "http://www.#{resource}.org/issues/#{page}", :class => "wiking external wiking-#{resource} wiking-issue")
+                            link_to(h(title).gsub(%r{##{page}}){ |s| "!##{page}" }, "http://www.#{resource}.org/issues/#{page}", :class => "wiking external wiking-#{resource} wiking-issue")
                         else
                             if page =~ %r{^(.+?)#(.*)$}
                                 page, anchor = $1, $2
