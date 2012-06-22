@@ -49,7 +49,7 @@ unless defined? ChiliProject::Liquid::Tags
                 params = []
                 options = {}
                 args.each do |arg|
-                    if arg =~ %r{^(.+)\=(.+)$}
+                    if arg =~ %r{^([^=]+)\=(.*)$}
                         options[$1.downcase.to_sym] = $2
                     else
                         params << arg

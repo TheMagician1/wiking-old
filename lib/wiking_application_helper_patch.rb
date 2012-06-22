@@ -7,7 +7,11 @@ module WikingApplicationHelperPatch
         base.send(:include, InstanceMethods)
         base.class_eval do
             unloadable
-            alias_method_chain :textilizable,        :wiking unless defined? ChiliProject # FIXME + version
+
+            unless defined? ChiliProject && ChiliProject::VERSION::MAJOR >= 3
+                alias_method_chain :textilizable,        :wiking
+            end
+
             alias_method_chain :parse_wiki_links,    :wiking
             alias_method_chain :parse_redmine_links, :wiking
         end
