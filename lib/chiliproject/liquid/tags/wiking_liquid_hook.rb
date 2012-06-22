@@ -35,10 +35,10 @@ class WikingLiquidHook < ChiliProject::Liquid::Tags::Tag
         unless @hook.blank?
             page = nil
             if context.registers[:object].is_a?(WikiContent)
-                page = context.registers[:object].page
+                page = context.registers[:object]
             end
 
-            context.registers[:view].call_hook("wiking_hook_#{@hook}", { :page => page, :args => @arguments, :options => @options })
+            content = context.registers[:view].call_hook("wiking_hook_#{@hook}", { :page => page, :args => @arguments, :options => @options })
         end
 
         content
