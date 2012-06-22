@@ -101,7 +101,7 @@ module WikingApplicationHelperPatch
                 end
             end
 
-            text
+            text.html_safe # FIXME: What about other versions?
         end
 
         WIKING_LINK_RE = %r{(!)?(\[\[(wikipedia|google|redmine|chiliproject)(?:\[([^\]])\])?>([^\]\n\|]+)(?:\|([^\]\n\|]+))?\]\])}
