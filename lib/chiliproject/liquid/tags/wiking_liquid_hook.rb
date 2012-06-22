@@ -4,9 +4,9 @@ class WikingLiquidHook < ChiliProject::Liquid::Tags::Tag
         @arguments = []
         @options = {}
 
-        markup = markup.strip
+        markup.strip!
         if markup =~ %r{^\((.*)\)$}
-            markup = $2
+            markup = $1
         end
 
         if markup.present?
@@ -26,19 +26,19 @@ class WikingLiquidHook < ChiliProject::Liquid::Tags::Tag
             @hook = @arguments.shift
         end
 
-        Rails.logger.info " >>> #{@hook.inspect}"
-        Rails.logger.info " >>> ARGUMENTS: #{@arguments.inspect}"
-        Rails.logger.info " >>> OPTIONS: #{@options.inspect}"
-
         super
     end
 
     def render(context)
         content = ''
 
-        unless @hook.empty?
-            # TODO: context.registers[:object].... page? # :page => page
-            call_hook("wiking_hook_#{@hook}", { :args => @arguments, :options => @options })
+        unless @hook.blank?
+            page = nil
+            if context.registers[:object].is_a?(WikiContent)
+                page = context.registers[:object].page
+            end
+
+            context.registers[:view].call_hook("wiking_hook_#{@hook}", { :page => page, :args => @arguments, :options => @options })
         end
 
         content
