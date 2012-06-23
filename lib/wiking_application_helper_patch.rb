@@ -11,8 +11,14 @@ module WikingApplicationHelperPatch
             alias_method_chain :parse_wiki_links,    :wiking
             alias_method_chain :parse_redmine_links, :wiking
 
+            define_method :parse_wiking_conditions, instance_method(:parse_wiking_conditions)
+
             if !defined?(ChiliProject) || ChiliProject::VERSION::MAJOR < 3
-                alias_method_chain :parse_headings, :wiking
+                if Redmine::VERSION::MAJOR == 1 && Redmine::VERSION::MINOR == 0
+                    alias_method_chain :textilizable, :wiking
+                else
+                    alias_method_chain :parse_headings, :wiking
+                end
             end
         end
     end
@@ -27,8 +33,7 @@ module WikingApplicationHelperPatch
 
         WIKING_CONDITION_RE = %r{!?\{\{(date|version)\s*((?:[<=>]|#{LT}|#{GT})=?)\s*([^\}]+)\}\}(.*?)\{\{\1\}\}}m
 
-        def parse_headings_with_wiking(text, project, obj, attr, only_path, options)
-            parse_headings_without_wiking(text, project, obj, attr, only_path, options)
+        def parse_wiking_conditions(text, project, obj, attr, only_path, options)
 
             text.gsub!(WIKING_CONDITION_RE) do |m|
                 tag, condition, value, content = $1, $2, $3, $4
@@ -89,6 +94,34 @@ module WikingApplicationHelperPatch
                 end
             end
 
+        end
+
+        def textilizable_with_wiking(*args) # For Redmine 1.0
+            text = textilizable_without_wiking(*args)
+
+            options = args.last.is_a?(Hash) ? args.pop : {}
+            case args.size
+            when 1
+                obj = options[:object]
+            when 2
+                obj = args.shift
+                attr = args.shift
+            else
+                return text
+            end
+            return text if text.blank?
+            project = options[:project] || @project || (obj && obj.respond_to?(:project) ? obj.project : nil)
+            only_path = options.delete(:only_path) == false ? false : true
+
+            parse_wiking_conditions(text, project, obj, attr, only_path, options)
+
+            text
+        end
+
+        def parse_headings_with_wiking(text, project, obj, attr, only_path, options)
+            parse_headings_without_wiking(text, project, obj, attr, only_path, options)
+
+            parse_wiking_conditions(text, project, obj, attr, only_path, options)
         end
 
         WIKING_LINK_RE = %r{(!)?(\[\[(wikipedia|google|redmine|chiliproject)(?:\[([^\]])\])?>([^\]\n\|]+)(?:\|([^\]\n\|]+))?\]\])}
