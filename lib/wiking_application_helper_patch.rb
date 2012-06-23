@@ -8,12 +8,12 @@ module WikingApplicationHelperPatch
         base.class_eval do
             unloadable
 
-            unless defined? ChiliProject && ChiliProject::VERSION::MAJOR >= 3
-                alias_method_chain :textilizable,        :wiking
-            end
-
             alias_method_chain :parse_wiki_links,    :wiking
             alias_method_chain :parse_redmine_links, :wiking
+
+            if !defined?(ChiliProject) || ChiliProject::VERSION::MAJOR < 3
+                alias_method_chain :parse_headings, :wiking
+            end
         end
     end
 
@@ -27,20 +27,8 @@ module WikingApplicationHelperPatch
 
         WIKING_CONDITION_RE = %r{!?\{\{(date|version)\s*((?:[<=>]|#{LT}|#{GT})=?)\s*([^\}]+)\}\}(.*?)\{\{\1\}\}}m
 
-        def textilizable_with_wiking(*args)
-            text = textilizable_without_wiking(*args)
-
-            options = args.last.is_a?(Hash) ? args.pop : {}
-            case args.size
-            when 1
-                obj = options[:object]
-            when 2
-                obj = args.shift
-            else
-                return text
-            end
-            return text if text.blank?
-            project = options[:project] || @project || (obj && obj.respond_to?(:project) ? obj.project : nil)
+        def parse_headings_with_wiking(text, project, obj, attr, only_path, options)
+            parse_headings_without_wiking(text, project, obj, attr, only_path, options)
 
             text.gsub!(WIKING_CONDITION_RE) do |m|
                 tag, condition, value, content = $1, $2, $3, $4
@@ -101,7 +89,6 @@ module WikingApplicationHelperPatch
                 end
             end
 
-            text.html_safe # FIXME: What about other versions?
         end
 
         WIKING_LINK_RE = %r{(!)?(\[\[(wikipedia|google|redmine|chiliproject)(?:\[([^\]])\])?>([^\]\n\|]+)(?:\|([^\]\n\|]+))?\]\])}
