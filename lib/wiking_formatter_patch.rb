@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require_dependency 'redmine/wiki_formatting/textile/formatter'
 
 module WikingFormatterPatch
@@ -102,33 +104,31 @@ module WikingFormatterPatch
             text.gsub!(%r{(-{2,3})}) do |match|
                 case $1
                 when '--'
-                    '&ndash;'
+                    '–'
                 else
-                    '&mdash;'
+                    '—'
                 end
             end
         end
 
         def inline_apostrophe(text)
             text.gsub!(%r{(\w)'}) do |match|
-                "#{$1}&rsquo;"
+                "#{$1}’"
             end
         end
 
         WIKING_ARROWS = {
-            '<=>' => 'hArr',
-            '<->' => 'harr',
-            '<='  => 'lArr',
-            '<-'  => 'larr',
-            '=>'  => 'rArr',
-            '->'  => 'rarr'
+            '<=>' => '⇔',
+            '<->' => '↔',
+            '<='  => '⇐',
+            '<-'  => '←',
+            '=>'  => '⇒',
+            '->'  => '→'
         }
 
         def inline_arrows(text)
-            WIKING_ARROWS.sort{ |a, b| a[1] <=> b[1] }.each do |code, entity|
-                text.gsub!(%r{#{code}}m) do |match|
-                    "&#{entity};"
-                end
+            WIKING_ARROWS.each do |code, entity|
+                text.gsub!(%r{#{code}}m, entity)
             end
         end
 
