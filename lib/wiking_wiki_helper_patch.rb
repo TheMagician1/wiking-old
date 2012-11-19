@@ -39,7 +39,7 @@ module WikingWikiHelperPatch
                 link_to(l(:label_more), wiking_url, :class => 'help-link',
                     :onclick => "window.open(\"#{wiking_url}\", \"\", \"resizable=yes, location=no, width=300, height=640, menubar=no, status=no, scrollbars=yes\"); return false;")
 
-            javascript_tag("var wikiToolbar = new jsToolBar($('#{field_id}')); wikiToolbar.setHelpLink('#{escape_javascript(help_link)}'); wikiToolbar.draw();")
+            javascript_tag("var wikiToolbar = new jsToolBar(document.getElementById('#{field_id}')); wikiToolbar.setHelpLink('#{escape_javascript(help_link)}'); wikiToolbar.draw();")
         end
 
     end
