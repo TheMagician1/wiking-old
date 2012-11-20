@@ -167,7 +167,7 @@ module WikingApplicationHelperPatch
             parse_wiki_links_without_wiking(text, project, obj, attr, only_path, options)
         end
 
-        WIKING_USER_RE = %r{([\s\(,\-\[\>]|^)(!)?(user)(\(([^\)]+?)\))?(?:(#)(\d+)|(:)([^"\s<>][^\s<>]*?|"[^"]+?"))(?=(?=[[:punct:]]\W)|,|\s|\]|<|$)}m
+        WIKING_USER_RE = %r{([\s\(,\-\[\>]|^)(!)?(([a-z0-9\-_]+):)?(user|file)(\(([^\)]+?)\))?(?:(#)(\d+)|(:)([^"\s<>][^\s<>]*?|"[^"]+?"))(?=(?=[[:punct:]]\W)|,|\s|\]|<|$)}m
 
         def parse_redmine_links_with_wiking(text, project, obj, attr, only_path, options)
             parse_redmine_links_without_wiking(text, project, obj, attr, only_path, options)
@@ -177,9 +177,17 @@ module WikingApplicationHelperPatch
             #   user:s-andy -> Link to user with username "s-andy"
             #   user:"s-andy" -> Link to user with username "s-andy"
             #   user(me)#1 | user(me):s-andy -> Display "me" instead of firstname and lastname
+            # Files:
+            #   file#1 -> Link to file with id 1
+            #   file:filename.ext -> Link to file with filename "filename.ext"
+            #   file:"filename.ext" -> Link to file with filename "filename.ext"
+            #   file(download here)#1 | file(download here):filename.ext -> Display "download here" instead of filename
             text.gsub!(WIKING_USER_RE) do |m|
-                leading, esc, prefix, option, display, sep, identifier = $1, $2, $3, $4, $5, $6 || $8, $7 || $9
+                leading, esc, project_prefix, project_identifier, prefix, option, display, sep, identifier = $1, $2, $3, $4, $5, $6, $7, $8 || $10, $9 || $11
                 link = nil
+                if project_identifier
+                    project = Project.visible.find_by_identifier(project_identifier)
+                end
                 if esc.nil?
                     if sep == '#'
                         oid = identifier.to_i
@@ -192,6 +200,15 @@ module WikingApplicationHelperPatch
                                                               :class => 'user')
                                 else
                                     link = h(name)
+                                end
+                            end
+                        when 'file'
+                            if project && file = Attachment.find_by_id(oid)
+                                if (file.container.is_a?(Version) && file.container.project == project) ||
+                                   (file.container.is_a?(Project) && file.container == project)
+                                    name = display || file.filename
+                                    link = link_to(h(name), { :only_path => only_path, :controller => 'attachments', :action => 'download', :id => file },
+                                                              :class => 'attachment')
                                 end
                             end
                         end
@@ -208,10 +225,23 @@ module WikingApplicationHelperPatch
                                     link = h(name)
                                 end
                             end
+                        when 'file'
+                            if project
+                                conditions = "container_type = 'Project' AND container_id = #{project.id}"
+                                if project.versions.any?
+                                    conditions = "(#{conditions}) OR "
+                                    conditions << "(container_type = 'Version' AND container_id IN (#{project.versions.collect{ |version| version.id }.join(', ')}))"
+                                end
+                                if file = Attachment.find_by_filename(oname, :conditions => conditions)
+                                    name = display || file.filename
+                                    link = link_to(h(name), { :only_path => only_path, :controller => 'attachments', :action => 'download', :id => file },
+                                                              :class => 'attachment')
+                                end
+                            end
                         end
                     end
                 end
-                leading + (link || "#{prefix}#{option}#{sep}#{identifier}")
+                leading + (link || "#{project_prefix}#{prefix}#{option}#{sep}#{identifier}")
             end
 
         end
