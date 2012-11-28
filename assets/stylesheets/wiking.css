@@ -168,25 +168,25 @@ span.wiking.smiley-exclamation {
 span.wiking.smiley-question {
     background-image: url(../images/smileys/question-frame.png);
 }
-.wiking.external {
+.wiking.external, div.wiki .wiking.external {
     background-repeat: no-repeat;
     background-position: 0% 60%;
     padding-left: 12px;
 }
-.external.wiking-google, .external.wiking-google {
+.external.wiking-google, div.wiki .external.wiking-google {
     background-image: url(../images/link-google.png);
     background-position: 0% 50%;
     padding-left: 13px;
 }
-.external.wiking-wikipedia, .external.wiking-wikipedia {
+.external.wiking-wikipedia, div.wiki .external.wiking-wikipedia {
     background-image: url(../images/link-wikipedia.png);
 }
-.external.wiking-redmine, .external.wiking-redmine {
+.external.wiking-redmine, div.wiki .external.wiking-redmine {
     background-image: url(../images/link-redmine.png);
     background-position: 0% 40%;
     padding-left: 13px;
 }
-.external.wiking-chiliproject, .external.wiking-chiliproject {
+.external.wiking-chiliproject, div.wiki .external.wiking-chiliproject {
     background-image: url(../images/link-chiliproject.png);
     padding-left: 11px;
 }
