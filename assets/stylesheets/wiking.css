@@ -190,3 +190,39 @@ span.wiking.smiley-question {
     background-image: url(../images/link-chiliproject.png);
     padding-left: 11px;
 }
+img.wiking.shadow {
+    -moz-box-shadow: 1px 1px 3px 1px #b4b4b4;
+    box-shadow: 1px 1px 3px 1px #b4b4b4;
+    margin: 2px 4px 4px 2px;
+}
+img.wiking.mac-shadow {
+    -moz-box-shadow: 0px 10px 30px 5px #b4b4b4;
+    box-shadow: 0px 10px 30px 5px #b4b4b4;
+    margin: 20px 30px 30px 20px;
+}
+pre.wiking.pressed {
+    -moz-box-shadow: inset 1px 1px 1px #ddd;
+    box-shadow: inset 1px 1px 1px #ddd;
+    -moz-text-shadow: 1px 1px 0px #ddd;
+    text-shadow: 1px 1px 0px #ddd;
+    padding: 2px;
+}
+a.wiking.button {
+    border-width: 1px;
+    border-style: solid;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    background-color: #507aaa;
+    border-color: #809fc3 #2C4056 #2C4056 #809fc3;
+    -moz-text-shadow: 1px 1px 1px #2C4056;
+    text-shadow: 1px 1px 1px #2C4056;
+    padding: 0.5em 1.25em;
+    text-decoration: none;
+    color: #fff;
+}
+a:active.wiking.button {
+    border-color: #2C4056 #809fc3 #809fc3 #2C4056;
+}
+.wiking.small {
+    font-size: 0.75em;
+}

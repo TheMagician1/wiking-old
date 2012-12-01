@@ -27,3 +27,28 @@ div.wiking.tip {
     border-color: #759fcf;
     color: #00365f;
 }
+img.wiking.shadow {
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    padding: 6px;
+}
+img.wiking.mac-shadow {
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    padding: 6px;
+}
+pre.wiking.pressed {
+    -moz-box-shadow: inset 1px 2px 2px #ddd;
+    box-shadow: inset 1px 2px 2px #ddd;
+}
+a.wiking.button {
+    background-color: #536a3f;
+    background-image: url(../../../themes/red-andy/images/menu-background.png);
+    background-repeat: repeat-x;
+    border-color: #afc69c #435335 #435335 #afc69c;
+    -moz-text-shadow: 1px 1px 1px #435335;
+    text-shadow: 1px 1px 1px #435335;
+}
+a:active.wiking.button {
+    border-color: #435335 #afc69c #afc69c #435335;
+}
