@@ -127,7 +127,7 @@ module WikingFormatterPatch
         }
 
         def inline_arrows(text)
-            WIKING_ARROWS.each do |code, entity|
+            WIKING_ARROWS.sort{ |a, b| b[0].length <=> a[0].length }.each do |code, entity|
                 text.gsub!(%r{#{code}}m, entity)
             end
         end
