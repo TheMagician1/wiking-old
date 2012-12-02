@@ -219,6 +219,7 @@ a.wiking.button {
     padding: 0.5em 1.25em;
     text-decoration: none;
     color: #fff;
+    display: inline-block;
 }
 a:active.wiking.button {
     border-color: #2C4056 #809fc3 #809fc3 #2C4056;
