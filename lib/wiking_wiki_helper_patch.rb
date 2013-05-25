@@ -26,11 +26,17 @@ module WikingWikiHelperPatch
                         wiki_heads << javascript_include_tag('jstoolbar/jstoolbar')
                         wiki_heads << javascript_include_tag('jstoolbar/textile')
                     end
-                    unless Redmine::VERSION::MAJOR < 2 || Redmine::VERSION::MINOR < 2 || Redmine::VERSION::TINY < 3
+                    unless Redmine::VERSION::MAJOR < 2 || (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR < 2) ||
+                          (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR == 2 && Redmine::VERSION::TINY < 3)
                         wiki_heads << javascript_include_tag('wiking', :plugin => 'wiking')
                     end
                     wiki_heads << javascript_include_tag("jstoolbar/lang/jstoolbar-#{current_language.to_s.downcase}")
                     wiki_heads << stylesheet_link_tag('jstoolbar')
+                    if wiki_heads.respond_to?(:html_safe)
+                        wiki_heads.html_safe
+                    else
+                        wiki_heads
+                    end
                 end
                 @heads_for_wiki_formatter_included = true
             end
@@ -41,19 +47,27 @@ module WikingWikiHelperPatch
                 url = "#{Redmine::Utils.relative_url_root}/help/wiki_syntax.html"
             end
 
-            if Redmine::VERSION::MAJOR < 2 || Redmine::VERSION::MINOR < 2 || Redmine::VERSION::TINY < 3
-                wiking_url = "#{Redmine::Utils.relative_url_root}/plugin_assets/wiking/help/wiki_syntax.html"
+            wiking_url = "#{Redmine::Utils.relative_url_root}/plugin_assets/wiking/help/wiki_syntax.html"
+
+            js_code = "var wikiToolbar = new jsToolBar(document.getElementById('#{field_id}'));"
+
+            if Redmine::VERSION::MAJOR < 2 || (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR < 2) ||
+              (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR == 2 && Redmine::VERSION::TINY < 3)
                 help_link = l(:setting_text_formatting) + ': ' +
                     link_to(l(:label_help), url, :class => 'help-link',
                         :onclick => "window.open(\"#{url}\", \"\", \"resizable=yes, location=no, width=300, height=640, menubar=no, status=no, scrollbars=yes\"); return false;") + ' &amp; ' +
                     link_to(l(:label_more), wiking_url, :class => 'help-link',
                         :onclick => "window.open(\"#{wiking_url}\", \"\", \"resizable=yes, location=no, width=300, height=640, menubar=no, status=no, scrollbars=yes\"); return false;")
             else
+                js_code << "wikiToolbar.setMoreLink('#{escape_javascript(wiking_url)}');"
+
                 help_link = url
             end
 
-            # TODO setMoreLink
-            javascript_tag("var wikiToolbar = new jsToolBar(document.getElementById('#{field_id}')); wikiToolbar.setHelpLink('#{escape_javascript(help_link)}'); wikiToolbar.draw();")
+            js_code << "wikiToolbar.setHelpLink('#{escape_javascript(help_link)}');"
+            js_code << "wikiToolbar.draw();"
+
+            javascript_tag(js_code)
         end
 
     end
