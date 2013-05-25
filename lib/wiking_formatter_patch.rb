@@ -101,12 +101,12 @@ module WikingFormatterPatch
         end
 
         def inline_dashes(text)
-            text.gsub!(%r{(-{2,3})}) do |match|
-                case $1
+            text.gsub!(%r{(\W)(-{2,3})(\W)}) do |match|
+                case $2
                 when '--'
-                    '–'
+                    "#{$1}–#{$3}"
                 else
-                    '—'
+                    "#{$1}—#{$3}"
                 end
             end
         end

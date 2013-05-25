@@ -124,7 +124,7 @@ module WikingApplicationHelperPatch
             parse_wiking_conditions(text, project, obj, attr, only_path, options)
         end
 
-        WIKING_LINK_RE = %r{(!)?(\[\[(wikipedia|google|redmine|chiliproject)(?:\[([^\]])\])?>([^\]\n\|]+)(?:\|([^\]\n\|]+))?\]\])}
+        WIKING_LINK_RE = %r{(!)?(\[\[(wikipedia|google|redmine|chiliproject)(?:\[([^\]]+)\])?>([^\]\n\|]+)(?:\|([^\]\n\|]+))?\]\])}
 
         def parse_wiki_links_with_wiking(text, project, obj, attr, only_path, options)
 

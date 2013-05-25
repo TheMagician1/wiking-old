@@ -6,6 +6,9 @@
     padding: 2px 0;
     background: none;
 }
+.jstb_more {
+    background-image: url(../images/jstoolbar/bt_more.png);
+}
 span.wiking-hidden {
     opacity: 0.25;
     filter: alpha(opacity=25);
