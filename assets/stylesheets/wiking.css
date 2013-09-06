@@ -103,6 +103,11 @@ span.marker-free.marker-super {
     width: 16px;
     height: 16px;
 }
+span.wiking.marker-experimental {
+    background-image: url(../images/experimental.png);
+    width: 138px;
+    height: 35px;
+}
 span.wiking.smiley {
     background-repeat: no-repeat;
     display: inline-block;

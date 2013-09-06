@@ -42,7 +42,7 @@ module WikingFormatterPatch
             false
         end
 
-        WIKING_MARKER_RE = %r{\{(#{LT}|<|\^)?(TODO|FIXME|UPDATE|NEW|FREE)(#{GT}|>)?\}}
+        WIKING_MARKER_RE = %r{\{(#{LT}|<|\^)?(TODO|FIXME|UPDATE|NEW|FREE|EXPERIMENTAL)(#{GT}|>)?\}}
 
         def inline_wiking_markers(text)
             text.gsub!(WIKING_MARKER_RE) do |match|
