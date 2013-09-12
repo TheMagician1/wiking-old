@@ -8,10 +8,13 @@ module WikingFormatterPatch
         base.extend(ClassMethods)
         base.send(:include, InstanceMethods)
         base.class_eval do
+            include Redmine::I18n
+
             self::RULES << :block_wiking_blocks
             self::RULES << :inline_wiking_markers
             self::RULES << :inline_wiking_smileys
             self::RULES << :inline_dashes
+            self::RULES << :inline_quotes
             self::RULES << :inline_apostrophe
             self::RULES << :inline_arrows
         end
@@ -107,6 +110,34 @@ module WikingFormatterPatch
                     "#{$1}–#{$3}"
                 else
                     "#{$1}—#{$3}"
+                end
+            end
+        end
+
+        WIKING_QUOTES_RE = %r{([\s\(,\-\[\>]|^)(!)?"(\s|\S*|\S(?:[\s\(,\-\[\>]"(?:\s|\S|.)*?"(?=(?=[[:punct:]]\W)|,|\s|\]|<)|.)*?\S)"(?=(?=[[:punct:]]\W)|,|\s|\]|<|$)}
+        WIKING_NESTED_QUOTES_RE =                      %r{([\s\(,\-\[\>])(!)?"((?:\s|\S|.)*?)"(?=(?=[[:punct:]]\W)|,|\s|\]|<)}
+
+        def inline_quotes(text)
+            text.gsub!(WIKING_QUOTES_RE) do |match|
+                leading, esc, content, nested = $1, $2, $3, $4
+
+                Rails.logger.info ' >>> ' + '"' + content + '"' # FIXME
+                if nested.nil?
+                    content.gsub!(WIKING_NESTED_QUOTES_RE) do |match2|
+                        leading2, esc2, content2 = $1, $2, $3
+                        Rails.logger.info ' >>>>>> ' + '"' + content2 + '"' # FIXME
+                        if esc2.nil?
+                            leading2 + l(:glyph_left_quote) + content2 + l(:glyph_right_quote)
+                        else
+                            leading2 + '"' + content2 + '"'
+                        end
+                    end
+                end
+
+                if esc.nil?
+                    leading + l(:glyph_left_quote) + content + l(:glyph_right_quote)
+                else
+                    leading + '"' + content + '"'
                 end
             end
         end

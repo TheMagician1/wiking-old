@@ -18,7 +18,7 @@ Rails.configuration.to_prepare do
     if defined? ChiliProject::Liquid::Tags
         require_dependency 'chiliproject/liquid/tags/wiking_liquid_hook'
 
-        ChiliProject::Liquid::Tags.register_tag('hook', WikingLiquidHook, :html => true)
+        ChiliProject::Liquid::Tags.register_tag('wiking_hook', WikingLiquidHook, :html => true)
     end
 end
 
@@ -38,8 +38,8 @@ end
 unless defined? ChiliProject::Liquid::Tags
 
     Redmine::WikiFormatting::Macros.register do
-        desc "Adds new Redmine hook to Wiki page and calls it. Example:\n\n  !{{hook(name, argument=value)}}"
-        macro :hook do |page, args|
+        desc "Adds new Redmine hook to Wiki page and calls it. Example:\n\n  !{{wiking_hook(name, argument=value)}}"
+        macro :wiking_hook do |page, args|
             if args.size > 0
                 hook = args.shift
 
