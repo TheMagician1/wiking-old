@@ -114,18 +114,16 @@ module WikingFormatterPatch
             end
         end
 
-        WIKING_QUOTES_RE = %r{([\s\(,\-\[\>]|^)(!)?"(\s|\S*|\S(?:[\s\(,\-\[\>]"(?:\s|\S|.)*?"(?=(?=[[:punct:]]\W)|,|\s|\]|<)|.)*?\S)"(?=(?=[[:punct:]]\W)|,|\s|\]|<|$)}
-        WIKING_NESTED_QUOTES_RE =                      %r{([\s\(,\-\[\>])(!)?"((?:\s|\S|.)*?)"(?=(?=[[:punct:]]\W)|,|\s|\]|<)}
+        WIKING_QUOTES_RE = %r{([\s\(,\-\[\>]|^)(!)?"(\s|\S*|\S(?:[\s\(,\-\[\>]"(?:\s|\S*|.*?)"(?=(?=[[:punct:]]\W)|,|\s|\]|<)|.)*?\S)"(?=(?=[[:punct:]]\W)|,|\s|\]|<|$)}
+        WIKING_NESTED_QUOTES_RE =                      %r{([\s\(,\-\[\>])(!)?"((?:\s|\S*|.*?))"(?=(?=[[:punct:]]\W)|,|\s|\]|<)}
 
         def inline_quotes(text)
             text.gsub!(WIKING_QUOTES_RE) do |match|
                 leading, esc, content, nested = $1, $2, $3, $4
 
-                Rails.logger.info ' >>> ' + '"' + content + '"' # FIXME
                 if nested.nil?
                     content.gsub!(WIKING_NESTED_QUOTES_RE) do |match2|
                         leading2, esc2, content2 = $1, $2, $3
-                        Rails.logger.info ' >>>>>> ' + '"' + content2 + '"' # FIXME
                         if esc2.nil?
                             leading2 + l(:glyph_left_quote) + content2 + l(:glyph_right_quote)
                         else
