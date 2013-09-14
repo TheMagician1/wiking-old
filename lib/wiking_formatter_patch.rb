@@ -114,28 +114,16 @@ module WikingFormatterPatch
             end
         end
 
-        WIKING_QUOTES_RE = %r{([\s\(,\-\[\>]|^)(!)?"(\s|\S*|\S(?:[\s\(,\-\[\>]"(?:\s|\S*|.*?)"(?=(?=[[:punct:]]\W)|,|\s|\]|<)|.)*?\S)"(?=(?=[[:punct:]]\W)|,|\s|\]|<|$)}
-        WIKING_NESTED_QUOTES_RE =                      %r{([\s\(,\-\[\>])(!)?"((?:\s|\S*|.*?))"(?=(?=[[:punct:]]\W)|,|\s|\]|<)}
+        WIKING_QUOTES_RE = %r{(?:(^|>|\s|[^\w"])(!)?"(?=\w|[^\w"]*")|(\w[^\w"\s]*|[^\w"\s]*)(!)?"(?=[^\w"\s]*(?:\s|<|$)))}
 
         def inline_quotes(text)
             text.gsub!(WIKING_QUOTES_RE) do |match|
-                leading, esc, content, nested = $1, $2, $3, $4
-
-                if nested.nil?
-                    content.gsub!(WIKING_NESTED_QUOTES_RE) do |match2|
-                        leading2, esc2, content2 = $1, $2, $3
-                        if esc2.nil?
-                            leading2 + l(:glyph_left_quote) + content2 + l(:glyph_right_quote)
-                        else
-                            leading2 + '"' + content2 + '"'
-                        end
-                    end
-                end
-
+                leading, esc, closing = $1 || $3, $2 || $4, $3
+                glyph = closing.nil? ? l(:glyph_left_quote) : l(:glyph_right_quote)
                 if esc.nil?
-                    leading + l(:glyph_left_quote) + content + l(:glyph_right_quote)
+                    leading + glyph
                 else
-                    leading + '"' + content + '"'
+                    leading + '"'
                 end
             end
         end
