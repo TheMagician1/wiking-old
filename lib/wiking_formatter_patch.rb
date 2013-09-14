@@ -119,7 +119,7 @@ module WikingFormatterPatch
         def inline_quotes(text)
             text.gsub!(WIKING_QUOTES_RE) do |match|
                 leading, esc, closing = $1 || $3, $2 || $4, $3
-                glyph = closing.nil? ? l(:glyph_left_quote) : l(:glyph_right_quote)
+                glyph = ll(Setting.default_language, closing.nil? ? :glyph_left_quote : :glyph_right_quote)
                 if esc.nil?
                     leading + glyph
                 else
