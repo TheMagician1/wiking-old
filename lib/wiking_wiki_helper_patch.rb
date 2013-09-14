@@ -26,10 +26,6 @@ module WikingWikiHelperPatch
                         wiki_heads << javascript_include_tag('jstoolbar/jstoolbar')
                         wiki_heads << javascript_include_tag('jstoolbar/textile')
                     end
-                    unless Redmine::VERSION::MAJOR < 2 || (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR < 2) ||
-                          (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR == 2 && Redmine::VERSION::TINY < 3)
-                        wiki_heads << javascript_include_tag('wiking', :plugin => 'wiking')
-                    end
                     wiki_heads << javascript_include_tag("jstoolbar/lang/jstoolbar-#{current_language.to_s.downcase}")
                     wiki_heads << stylesheet_link_tag('jstoolbar')
                     if wiki_heads.respond_to?(:html_safe)
@@ -39,6 +35,16 @@ module WikingWikiHelperPatch
                     end
                 end
                 @heads_for_wiki_formatter_included = true
+            end
+
+            unless Redmine::VERSION::MAJOR < 2 || (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR < 2) ||
+                  (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR == 2 && Redmine::VERSION::TINY < 3)
+                unless @wiking_heads_for_wiki_formatter_included
+                    content_for :header_tags do
+                        javascript_include_tag('wiking', :plugin => 'wiking')
+                    end
+                    @wiking_heads_for_wiki_formatter_included = true
+                end
             end
 
             if defined? ChiliProject
