@@ -14,7 +14,7 @@ module WikingFormatterPatch
             self::RULES << :inline_wiking_markers
             self::RULES << :inline_wiking_smileys
             self::RULES << :inline_dashes
-            self::RULES << :inline_quotes
+           #self::RULES << :inline_quotes # FIXME use #pgl for all #inline_*
             self::RULES << :inline_apostrophe
             self::RULES << :inline_arrows
         end
