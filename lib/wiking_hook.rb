@@ -8,6 +8,7 @@ class WikiNGHook  < Redmine::Hook::ViewListener
         styles
     end
 
-    render_on :wiking_hook_demo, :partial => 'wiking/demo_hook'
+    render_on :wiking_hook_demo,          :partial => 'wiking/demo_hook'
+    render_on :view_account_right_bottom, :partial => 'wiking/mentions'
 
 end

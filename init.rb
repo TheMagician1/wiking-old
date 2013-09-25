@@ -15,6 +15,13 @@ Rails.configuration.to_prepare do
         ApplicationHelper.send(:include, WikingApplicationHelperPatch)
     end
 
+    unless WikiContent.included_modules.include?(WikingContentPatch)
+        WikiContent.send(:include, WikingContentPatch)
+    end
+    unless Comment.included_modules.include?(WikingCommentPatch)
+        Comment.send(:include, WikingCommentPatch)
+    end
+
     if defined? ChiliProject::Liquid::Tags
         require_dependency 'chiliproject/liquid/tags/wiking_liquid_hook'
 

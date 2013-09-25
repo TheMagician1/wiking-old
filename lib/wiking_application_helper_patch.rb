@@ -8,18 +8,13 @@ module WikingApplicationHelperPatch
         base.class_eval do
             unloadable
 
+            alias_method_chain :textilizable,        :wiking
+            alias_method_chain :parse_headings,      :wiking unless Redmine::VERSION::MAJOR == 1 && Redmine::VERSION::MINOR == 0
             alias_method_chain :parse_wiki_links,    :wiking
             alias_method_chain :parse_redmine_links, :wiking
 
             define_method :parse_wiking_conditions, instance_method(:parse_wiking_conditions)
-
-            if !defined?(ChiliProject) || ChiliProject::VERSION::MAJOR < 3
-                if Redmine::VERSION::MAJOR == 1 && Redmine::VERSION::MINOR == 0
-                    alias_method_chain :textilizable, :wiking
-                else
-                    alias_method_chain :parse_headings, :wiking
-                end
-            end
+            define_method :update_mentions,         instance_method(:update_mentions)
         end
     end
 
@@ -30,6 +25,18 @@ module WikingApplicationHelperPatch
 
         LT = "&lt;"
         GT = "&gt;"
+
+        def update_mentions(object, mentions = [])
+            mentions.uniq!
+            digest = mentions.collect(&:id).sort.join(',')
+            unless digest == Mention.digest(object)
+                Mention.transaction do
+                    mentions.each do |user|
+                        Mention.create(:mentioning => object, :mentioned => user) # TODO: take object's created_on or (updated_at?)
+                    end
+                end
+            end
+        end
 
         WIKING_CONDITION_RE = %r{!?\{\{(date|version)\s*((?:[<=>]|#{LT}|#{GT})=?)\s*([^\}]+)\}\}(.*?)\{\{\1\}\}}m
 
@@ -96,24 +103,38 @@ module WikingApplicationHelperPatch
 
         end
 
-        def textilizable_with_wiking(*args) # For Redmine 1.0
+        def textilizable_with_wiking(*args)
+            @mentions = []
+
             text = textilizable_without_wiking(*args)
 
             options = args.last.is_a?(Hash) ? args.pop : {}
             case args.size
             when 1
-                obj = options[:object]
+                object = options[:object]
             when 2
-                obj = args.shift
-                attr = args.shift
-            else
-                return text
+                object = args[0]
             end
-            return text if text.blank?
-            project = options[:project] || @project || (obj && obj.respond_to?(:project) ? obj.project : nil)
-            only_path = options.delete(:only_path) == false ? false : true
 
-            parse_wiking_conditions(text, project, obj, attr, only_path, options)
+             # FIXME not for previews and not for unsaved (contact emails?)!
+            update_mentions(object, @mentions) if object && object.is_a?(::ActiveRecord::Base) # FIXME for advertisements object is String
+
+            if (!defined?(ChiliProject) || ChiliProject::VERSION::MAJOR < 3) && Redmine::VERSION::MAJOR == 1 && Redmine::VERSION::MINOR == 0 # For Redmine 1.0
+                case args.size
+                when 1
+                    obj = options[:object]
+                when 2
+                    obj = args.shift
+                    attr = args.shift
+                else
+                    return text
+                end
+                return text if text.blank?
+                project = options[:project] || @project || (obj && obj.respond_to?(:project) ? obj.project : nil)
+                only_path = options.delete(:only_path) == false ? false : true
+
+                parse_wiking_conditions(text, project, obj, attr, only_path, options)
+            end
 
             text
         end
@@ -201,6 +222,8 @@ module WikingApplicationHelperPatch
                                 else
                                     link = h(name)
                                 end
+
+                                @mentions << user
                             end
                         when 'file'
                             if project && file = Attachment.find_by_id(oid)
@@ -224,6 +247,8 @@ module WikingApplicationHelperPatch
                                 else
                                     link = h(name)
                                 end
+
+                                @mentions << user
                             end
                         when 'file'
                             if project

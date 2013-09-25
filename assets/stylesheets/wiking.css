@@ -237,3 +237,9 @@ a:active.wiking.button {
 .wiking.small {
     font-size: 0.75em;
 }
+dt.news-comments {
+    background-image: url(../images/news-comments.png);
+}
+.tab-content .contextual {
+    margin-top: auto;
+}

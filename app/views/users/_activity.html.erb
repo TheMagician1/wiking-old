@@ -1,0 +1,26 @@
+<div class="contextual">
+  <% unless @events_by_day.empty? %>
+    <%= link_to(l(:label_overall_activity), :controller => 'activities',
+                                            :action => 'index',
+                                            :id => nil,
+                                            :user_id => @user,
+                                            :from => @events_by_day.keys.first) %>
+  <% end %>
+</div>
+
+<!-- FIXME % unless @events_by_day.empty? % -->
+
+<script type="text/javascript">
+  //<![CDATA[
+  <% if defined? observe_field %>
+    var rightColumn = $('content').down('.splitcontentright');
+    var activityTab = $('tab-content-activity');
+    rightColumn.down('h3').hide();
+    activityTab.insert(rightColumn.down('p'));
+    activityTab.insert(rightColumn.down('#activity'));
+    activityTab.insert(rightColumn.down('p.other-formats'));
+  <% else %>
+    // TODO
+  <% end %>
+  //]]>
+</script>

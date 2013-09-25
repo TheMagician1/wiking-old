@@ -1,0 +1,14 @@
+<%= render_tabs([{ :name => 'activity', :partial => 'users/activity', :label => :label_activity },
+                 { :name => 'mentions', :partial => 'users/mentions', :label => :label_mentions }]) %>
+
+<script type="text/javascript">
+  //<![CDATA[
+  <% if defined? observe_field %>
+    var rightColumn = $('content').down('.splitcontentright');
+    var activityTabs = $('content').down('.tabs');
+    rightColumn.insert({ top: activityTabs.remove() });
+  <% else %>
+    // TODO
+  <% end %>
+  //]]>
+</script>

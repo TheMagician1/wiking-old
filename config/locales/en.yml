@@ -1,4 +1,10 @@
 en:
   permission_view_hidden_content: View hidden content
+
   glyph_left_quote: “
   glyph_right_quote: ”
+
+  label_mentions: Mentions
+  label_user_mentions: Mentions of %{value}
+  label_view_all_mentions: View all mentions
+  label_total_number_of_mentions: Total number of mentions
