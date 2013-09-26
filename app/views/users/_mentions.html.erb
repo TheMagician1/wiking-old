@@ -8,17 +8,11 @@
   <%= l(:label_total_number_of_mentions)%>: <%= Mention.count(:conditions => { :mentioned_id => @user.id }) %>
 </p>
 
-<% mentions = Mention.find(:all,
-                           :conditions => { :mentioned_id => @user.id },
-                           :order => "created_on DESC",
-                           :limit => 10) %><!-- FIXME no limit? -->
-<% mentions_by_day = mentions.group_by{ |mention| mention.created_on.to_date } %>
-
 <div id="activity">
-  <% mentions_by_day.keys.sort.reverse.each do |day| %>
+  <% @mentions_by_day.keys.sort.reverse.each do |day| %>
     <h4><%= format_activity_day(day) %></h4>
     <dl>
-      <% mentions_by_day[day].sort{ |a, b| b.created_on <=> a.created_on }.each do |mention| %>
+      <% @mentions_by_day[day].sort{ |a, b| b.created_on <=> a.created_on }.each do |mention| %>
         <dt class="<%= mention.class_name %>">
           <span class="time"><%= format_time(mention.created_on, false) %></span>
           <%= content_tag('span', h(mention.project), :class => 'project') if mention.project %>

@@ -32,7 +32,7 @@ module WikingApplicationHelperPatch
             unless digest == Mention.digest(object)
                 Mention.transaction do
                     mentions.each do |user|
-                        Mention.create(:mentioning => object, :mentioned => user) # TODO: take object's created_on or (updated_at?)
+                        Mention.create(:mentioning => object, :mentioned => user)
                     end
                 end
             end
@@ -116,8 +116,9 @@ module WikingApplicationHelperPatch
                 object = args[0]
             end
 
-             # FIXME not for previews and not for unsaved (contact emails?)!
-            update_mentions(object, @mentions) if object && object.is_a?(::ActiveRecord::Base) # FIXME for advertisements object is String
+            if object && !object.new_record? && !object.changed?
+                update_mentions(object, @mentions)
+            end
 
             if (!defined?(ChiliProject) || ChiliProject::VERSION::MAJOR < 3) && Redmine::VERSION::MAJOR == 1 && Redmine::VERSION::MINOR == 0 # For Redmine 1.0
                 case args.size

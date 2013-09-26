@@ -1,14 +1,10 @@
 <div class="contextual">
-  <% unless @events_by_day.empty? %>
-    <%= link_to(l(:label_overall_activity), :controller => 'activities',
-                                            :action => 'index',
-                                            :id => nil,
-                                            :user_id => @user,
-                                            :from => @events_by_day.keys.first) %>
-  <% end %>
+  <%= link_to(l(:label_overall_activity), :controller => 'activities',
+                                          :action => 'index',
+                                          :id => nil,
+                                          :user_id => @user,
+                                          :from => @events_by_day.keys.first) %>
 </div>
-
-<!-- FIXME % unless @events_by_day.empty? % -->
 
 <script type="text/javascript">
   //<![CDATA[

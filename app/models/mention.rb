@@ -2,6 +2,18 @@ class Mention < ActiveRecord::Base
     belongs_to :mentioned, :class_name => 'User'
     belongs_to :mentioning, :polymorphic => true
 
+    before_save :set_created_on
+
+    def set_created_on
+        if mentioning.respond_to?(:mentioning_date)
+            self.created_on = mentioning.mentioning_date
+        elsif mentioning.respond_to?(:updated_on)
+            self.created_on = mentioning.updated_on
+        elsif mentioning.respond_to?(:created_on)
+            self.created_on = mentioning.created_on
+        end
+    end
+
     def class_name
         @class_name ||= if mentioning.respond_to?(:mentioning_class)
             mentioning.mentioning_class

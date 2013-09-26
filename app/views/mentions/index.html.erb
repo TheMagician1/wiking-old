@@ -30,4 +30,16 @@
   <% end %>
 </div>
 
+<div style="float: left;">
+  <% prev_params = params.dup %>
+  <% prev_params[:next_offset] = @prev_offset if @prev_offset %>
+  <% @prev_offset ||= 0 %>
+  <%= link_to_content_update("\xc2\xab " + l(:label_previous), prev_params.merge(:offset => @offset), :title => l(:label_previous)) if (@offset - @prev_offset) >= 50 %>
+</div>
+<div style="float: right;">
+  <%= link_to_content_update(l(:label_next) + " \xc2\xbb", params.merge(:offset => @next_offset), :title => l(:label_next)) if @next_offset %>
+</div>
+
+<p>&nbsp;</p>
+
 <% html_title(l(:label_mentions), @user) %>
