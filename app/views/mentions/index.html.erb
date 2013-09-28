@@ -1,4 +1,4 @@
-<h2><%= l(:label_user_mentions, link_to_user(@user)) %></h2>
+<h2><%= l(:label_user_mentions, link_to_user(@user)).html_safe %></h2>
 
 <div id="activity">
   <% @mentions_by_day.keys.sort.reverse.each do |day| %>
