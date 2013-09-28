@@ -116,7 +116,7 @@ module WikingApplicationHelperPatch
                 object = args[0]
             end
 
-            if object && !object.new_record? && !object.changed?
+            if object && !object.new_record? && !object.changed? && controller_name != 'previews' && action_name != 'preview'
                 update_mentions(object, @mentions)
             end
 
