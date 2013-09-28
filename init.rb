@@ -15,6 +15,9 @@ Rails.configuration.to_prepare do
         ApplicationHelper.send(:include, WikingApplicationHelperPatch)
     end
 
+    unless CommentsController.included_modules.include?(WikingCommentsControllerPatch)
+        CommentsController.send(:include, WikingCommentsControllerPatch)
+    end
     unless WikiContent.included_modules.include?(WikingContentPatch)
         WikiContent.send(:include, WikingContentPatch)
     end
