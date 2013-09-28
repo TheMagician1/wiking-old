@@ -24,7 +24,12 @@
     activityTab.insert(rightColumn.down('#activity'));
     activityTab.insert(rightColumn.down('p.other-formats'));
   <% else %>
-    // TODO
+    var rightColumn = $('#content').find('.splitcontentright');
+    var activityTab = $('#tab-content-activity');
+    rightColumn.find('h3').hide();
+    activityTab.append(rightColumn.find('p'));
+    activityTab.append(rightColumn.find('#activity'));
+    activityTab.append(rightColumn.find('p.other-formats'));
   <% end %>
   //]]>
 </script>

@@ -27,7 +27,9 @@ end %>
       var activityTabs = $('content').down('.tabs');
       rightColumn.insert({ top: activityTabs.remove() });
     <% else %>
-      // TODO
+      var rightColumn = $('#content').find('.splitcontentright');
+      var activityTabs = $('#content').find('.tabs');
+      rightColumn.prepend(activityTabs.remove());
     <% end %>
     //]]>
   </script>
