@@ -27,6 +27,15 @@ div.wiking.tip {
     border-color: #759fcf;
     color: #00365f;
 }
+div.wiking.tip a,
+div.wiking.tip a:link,
+div.wiking.tip a:visited {
+    color: #b85100;
+}
+div.wiking.tip a:hover,
+div.wiking.tip a:active {
+    color: #c61a1a;
+}
 img.wiking.shadow {
     -moz-border-radius: 6px;
     border-radius: 6px;

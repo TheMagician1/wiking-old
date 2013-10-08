@@ -15,14 +15,15 @@ Rails.configuration.to_prepare do
         ApplicationHelper.send(:include, WikingApplicationHelperPatch)
     end
 
-    unless CommentsController.included_modules.include?(WikingCommentsControllerPatch)
-        CommentsController.send(:include, WikingCommentsControllerPatch)
-    end
     unless WikiContent.included_modules.include?(WikingContentPatch)
         WikiContent.send(:include, WikingContentPatch)
     end
     unless Comment.included_modules.include?(WikingCommentPatch)
         Comment.send(:include, WikingCommentPatch)
+    end
+
+    unless Mailer.included_modules.include?(WikingMailerPatch)
+        Mailer.send(:include, WikingMailerPatch)
     end
 
     if defined? ChiliProject::Liquid::Tags
@@ -38,7 +39,7 @@ Redmine::Plugin.register :wiking do
     author_url 'http://www.andriylesyuk.com/'
     description 'Wiki Next Generation plugin extends Redmine Wiki syntax.'
     url 'http://projects.andriylesyuk.com/projects/wiking'
-    version '0.0.4'
+    version '0.1.0'
 
     project_module :wiki do
         permission :view_hidden_content, {}
