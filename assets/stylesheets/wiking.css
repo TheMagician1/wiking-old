@@ -243,3 +243,10 @@ dt.news-comments {
 .tab-content .contextual {
     margin-top: auto;
 }
+#admin-menu a.custom-macros {
+    background-image: url(../images/macro.png);
+}
+.new_wiki_macro ul.argument-syntax, .edit_wiki_macro ul.argument-syntax {
+    padding-left: 210px;
+    margin: 0;
+}

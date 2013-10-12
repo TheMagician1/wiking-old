@@ -4,6 +4,9 @@ ru:
   glyph_left_quote: «
   glyph_right_quote: »
 
+  label_custom_wiki_macro_plural: Настраиваемые макросы Wiki
+  label_custom_wiki_macro_new: Новый макрос
+
   label_mentions: Упоминания
   label_user_mentions: Упоминания %{value}
   label_view_all_mentions: Показать все упоминания

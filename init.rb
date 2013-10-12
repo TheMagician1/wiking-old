@@ -11,6 +11,9 @@ Rails.configuration.to_prepare do
     unless Redmine::WikiFormatting::Textile::Helper.included_modules.include?(WikingWikiHelperPatch)
         Redmine::WikiFormatting::Textile::Helper.send(:include, WikingWikiHelperPatch)
     end
+    unless Redmine::WikiFormatting::Macros::Definitions.included_modules.include?(WikingMacrosDefinitionsPatch)
+        Redmine::WikiFormatting::Macros::Definitions.send(:include, WikingMacrosDefinitionsPatch)
+    end
     unless ApplicationHelper.included_modules.include?(WikingApplicationHelperPatch)
         ApplicationHelper.send(:include, WikingApplicationHelperPatch)
     end
@@ -44,6 +47,11 @@ Redmine::Plugin.register :wiking do
     project_module :wiki do
         permission :view_hidden_content, {}
     end
+
+    menu :admin_menu, :custom_macros,
+                    { :controller => 'macros', :action => 'index' },
+                      :caption => :label_custom_wiki_macro_plural,
+                      :after => :custom_fields
 end
 
 unless defined? ChiliProject::Liquid::Tags
@@ -57,7 +65,7 @@ unless defined? ChiliProject::Liquid::Tags
                 params = []
                 options = {}
                 args.each do |arg|
-                    if arg =~ %r{^([^=]+)\=(.*)$}
+                    if arg =~ %r{^([^=]+)=(.*)$}
                         options[$1.downcase.to_sym] = $2
                     else
                         params << arg
@@ -68,5 +76,7 @@ unless defined? ChiliProject::Liquid::Tags
             end
         end
     end
+
+    WikiMacro.register_all!
 
 end

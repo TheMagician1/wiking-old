@@ -4,6 +4,17 @@ en:
   glyph_left_quote: “
   glyph_right_quote: ”
 
+  label_custom_wiki_macro_plural: Custom Wiki macros
+  label_custom_wiki_macro_new: New macro
+
+  text_custom_wiki_macro_name_info: Only lower case letters (a-z), numbers and underscores are allowed.
+  text_custom_wiki_macro_desc_info: 'Wiki syntax is supported. Example:'
+  text_custom_wiki_macro_desc_sample: Displays a list of all available macros, including description if available.
+  text_custom_wiki_macro_content_info: 'HTML is supported. Syntax for arguments:'
+  text_custom_wiki_macro_named_argument: '%{name} - named argument specified using: name=value.'
+  text_custom_wiki_macro_unnamed_argument: '%[1] - unnamed argument specified as just value.'
+  text_custom_wiki_macro_body: '%(*) - text body of the macro.'
+
   label_mentions: Mentions
   label_user_mentions: Mentions of %{value}
   label_view_all_mentions: View all mentions

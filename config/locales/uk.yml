@@ -4,6 +4,9 @@ ru:
   glyph_left_quote: «
   glyph_right_quote: »
 
+  label_custom_wiki_macro_plural: Користувацькі макроси Wiki
+  label_custom_wiki_macro_new: Новий макрос
+
   label_mentions: Згадки
   label_user_mentions: Згадки %{value}
   label_view_all_mentions: Переглянути усі згадки
