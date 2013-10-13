@@ -189,7 +189,7 @@ module WikingApplicationHelperPatch
             parse_wiki_links_without_wiking(text, project, obj, attr, only_path, options)
         end
 
-        WIKING_USER_RE = %r{([\s\(,\-\[\>]|^)(!)?(([a-z0-9\-_]+):)?(user|file)(\(([^\)]+?)\))?(?:(#)(\d+)|(:)([^"\s<>][^\s<>]*?|"[^"]+?"))(?=(?=[[:punct:]]\W)|,|\s|\]|<|$)}m
+        WIKING_USER_RE = %r{([\s\(,\-\[\>]|^)(!)?(([a-z0-9\-_]+):)?(user|file)(\(([^\)]+?)\)|\[([^\]]+?)\])?(?:(#)(\d+)|(:)([^"\s<>][^\s<>]*?|"[^"]+?"))(?=(?=[[:punct:]]\W)|,|\s|\]|<|$)}m
 
         def parse_redmine_links_with_wiking(text, project, obj, attr, only_path, options)
             parse_redmine_links_without_wiking(text, project, obj, attr, only_path, options)
@@ -199,24 +199,38 @@ module WikingApplicationHelperPatch
             #   user:s-andy -> Link to user with username "s-andy"
             #   user:"s-andy" -> Link to user with username "s-andy"
             #   user(me)#1 | user(me):s-andy -> Display "me" instead of firstname and lastname
+            #   user[f]#1 | user[f]:s-andy -> Display firstname
             # Files:
             #   file#1 -> Link to file with id 1
             #   file:filename.ext -> Link to file with filename "filename.ext"
             #   file:"filename.ext" -> Link to file with filename "filename.ext"
             #   file(download here)#1 | file(download here):filename.ext -> Display "download here" instead of filename
             text.gsub!(WIKING_USER_RE) do |m|
-                leading, esc, project_prefix, project_identifier, prefix, option, display, sep, identifier = $1, $2, $3, $4, $5, $6, $7, $8 || $10, $9 || $11
+                leading, esc, project_prefix, project_identifier, prefix, option, display, format, sep, identifier = $1, $2, $3, $4, $5, $6, $7, $8, $9 || $11, $10 || $12
                 link = nil
-                if project_identifier
-                    project = Project.visible.find_by_identifier(project_identifier)
-                end
                 if esc.nil?
+                    if project_identifier
+                        project = Project.visible.find_by_identifier(project_identifier)
+                    end
+                    if prefix == 'user' && format
+                        case format
+                        when 'fl'
+                            format = 'firstname_lastname'
+                        when 'f'
+                            format = 'firstname'
+                        when 'lf'
+                            format = 'lastname_firstname'
+                        when 'u'
+                            format = 'username'
+                        end
+                        format = format.to_sym
+                    end
                     if sep == '#'
                         oid = identifier.to_i
                         case prefix
                         when 'user'
                             if user = User.find_by_id(oid)
-                                name = display || user.name
+                                name = display || user.name(format)
                                 if user.active?
                                     link = link_to(h(name), { :only_path => only_path, :controller => 'users', :action => 'show', :id => user },
                                                               :class => 'user')
@@ -241,7 +255,7 @@ module WikingApplicationHelperPatch
                         case prefix
                         when 'user'
                             if user = User.find_by_login(oname)
-                                name = display || user.name
+                                name = display || user.name(format)
                                 if user.active?
                                     link = link_to(h(name), { :only_path => only_path, :controller => 'users', :action => 'show', :id => user },
                                                               :class => 'user')
