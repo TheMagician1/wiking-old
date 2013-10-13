@@ -104,9 +104,15 @@ span.marker-free.marker-super {
     height: 16px;
 }
 span.wiking.marker-experimental {
+    background-image: url(../images/experimental-text.png);
+    width: 55px;
+    height: 14px;
+}
+span.marker-experimental.marker-left,
+span.marker-experimental.marker-right {
     background-image: url(../images/experimental.png);
-    width: 138px;
-    height: 35px;
+    width: 110px;
+    height: 28px;
 }
 span.wiking.smiley {
     background-repeat: no-repeat;

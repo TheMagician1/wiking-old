@@ -4,6 +4,8 @@ require_dependency 'wiking_hook'
 
 Rails.logger.info 'Starting WikiNG Plugin for Redmine'
 
+ActiveRecord::Base.observers << :mention_observer
+
 Rails.configuration.to_prepare do
     unless Redmine::WikiFormatting::Textile::Formatter.included_modules.include?(WikingFormatterPatch)
         Redmine::WikiFormatting::Textile::Formatter.send(:include, WikingFormatterPatch)
@@ -25,6 +27,11 @@ Rails.configuration.to_prepare do
         Comment.send(:include, WikingCommentPatch)
     end
 
+    if defined? Redmine::Notifiable # to protect Redmine 1.0
+        unless Redmine::Notifiable.included_modules.include?(WikingNotifiablePatch)
+            Redmine::Notifiable.send(:include, WikingNotifiablePatch)
+        end
+    end
     unless Mailer.included_modules.include?(WikingMailerPatch)
         Mailer.send(:include, WikingMailerPatch)
     end

@@ -26,11 +26,13 @@ module WikingMailerPatch
 
             redmine_headers('Mentioning-Type' => mention.mentioning.class.name,
                             'Mentioning-Id'   => mention.mentioning.id)
-            redmine_headers('Project' => mention.project.identifier) if mention.project
+            redmine_headers('Project'         => mention.project.identifier) if mention.project
             message_id(mention)
             recipients(mention.mentioned.mail) # FIXME array?
-            subject(subject_prefix + l(:mail_subject_you_mentioned))
-            body(:title => mention.title, :url   => mention.url)
+            subject(subject_prefix + l(:mail_subject_you_mentioned, :locale =>  mention.mentioned.language))
+            body(:title => mention.title,
+                 :url   => mention.url,
+                 :user  => mention.mentioned)
 
             render_multipart('you_mentioned', body)
         end
