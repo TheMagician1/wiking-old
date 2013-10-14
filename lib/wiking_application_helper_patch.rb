@@ -14,6 +14,7 @@ module WikingApplicationHelperPatch
             alias_method_chain :parse_redmine_links, :wiking
 
             define_method :parse_wiking_conditions, instance_method(:parse_wiking_conditions)
+            define_method :parse_footnotes,         instance_method(:parse_footnotes)
             define_method :update_mentions,         instance_method(:update_mentions)
         end
     end
@@ -103,6 +104,30 @@ module WikingApplicationHelperPatch
 
         end
 
+        WIKING_FOOTNOTE_RE = %r{([^\s\(,\-.])(!)?\(\(([^\)]*)\)\)(?=(?=[[:punct:]]\W)|,|\s|\]|<|$)}
+
+        def parse_footnotes(text, project, obj, attr, only_path, options)
+            footnotes = []
+
+            text.gsub!(WIKING_FOOTNOTE_RE) do |m|
+                leading, esc, content = $1, $2, $3
+                if esc.nil?
+                    footnotes << content
+                    leading + '<sup><a href="#fng' + footnotes.size.to_s + '">' + footnotes.size.to_s + '</a></sup>'
+                else
+                    leading + '((' + content + '))'
+                end
+            end
+
+            if footnotes.any?
+                text << '<div id="footnotes" class="footnotes">'
+                footnotes.each_with_index do |footnote, index|
+                    text << '<p id="fng' + (index + 1).to_s + '" class="footnote"><sup>' + (index + 1).to_s + '</sup> ' + footnote + "</p>\n"
+                end
+                text << '</div>'
+            end
+        end
+
         def textilizable_with_wiking(*args)
             @mentions = []
 
@@ -144,6 +169,7 @@ module WikingApplicationHelperPatch
             parse_headings_without_wiking(text, project, obj, attr, only_path, options)
 
             parse_wiking_conditions(text, project, obj, attr, only_path, options)
+            parse_footnotes(text, project, obj, attr, only_path, options)
         end
 
         WIKING_LINK_RE = %r{(!)?(\[\[(wikipedia|google|redmine|chiliproject)(?:\[([^\]]+)\])?>([^\]\n\|]+)(?:\|([^\]\n\|]+))?\]\])}

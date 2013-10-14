@@ -61,3 +61,15 @@ a.wiking.button {
 a:active.wiking.button {
     border-color: #435335 #afc69c #afc69c #435335;
 }
+div.footnotes {
+    border-top: 1px solid #cf973d;
+    margin-top: 2em;
+    padding-top: 0.25em;
+}
+div.footnotes p.footnote > sup {
+    vertical-align: baseline;
+    font-size: inherit;
+}
+div.footnotes p.footnote > sup:after {
+    content: ". — ";
+}
