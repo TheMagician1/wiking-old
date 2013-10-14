@@ -71,5 +71,5 @@ div.footnotes p.footnote > sup {
     font-size: inherit;
 }
 div.footnotes p.footnote > sup:after {
-    content: ". — ";
+    content: " — ";
 }

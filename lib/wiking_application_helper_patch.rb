@@ -13,6 +13,8 @@ module WikingApplicationHelperPatch
             alias_method_chain :parse_wiki_links,    :wiking
             alias_method_chain :parse_redmine_links, :wiking
 
+            alias_method_chain :link_to_user,        :login
+
             define_method :parse_wiking_conditions, instance_method(:parse_wiking_conditions)
             define_method :parse_footnotes,         instance_method(:parse_footnotes)
             define_method :update_mentions,         instance_method(:update_mentions)
@@ -258,7 +260,7 @@ module WikingApplicationHelperPatch
                             if user = User.find_by_id(oid)
                                 name = display || user.name(format)
                                 if user.active?
-                                    link = link_to(h(name), { :only_path => only_path, :controller => 'users', :action => 'show', :id => user },
+                                    link = link_to(h(name), { :only_path => only_path, :controller => 'users', :action => 'show', :id => user.login.downcase },
                                                               :class => 'user')
                                 else
                                     link = h(name)
@@ -283,7 +285,7 @@ module WikingApplicationHelperPatch
                             if user = User.find_by_login(oname)
                                 name = display || user.name(format)
                                 if user.active?
-                                    link = link_to(h(name), { :only_path => only_path, :controller => 'users', :action => 'show', :id => user },
+                                    link = link_to(h(name), { :only_path => only_path, :controller => 'users', :action => 'show', :id => user.login.downcase },
                                                               :class => 'user')
                                 else
                                     link = h(name)
@@ -310,6 +312,14 @@ module WikingApplicationHelperPatch
                 leading + (link || "#{project_prefix}#{prefix}#{option}#{sep}#{identifier}")
             end
 
+        end
+
+        def link_to_user_with_login(user, options = {})
+            if user.is_a?(User) && user.active? && user.login.match(%r{^[a-z0-9_\-.]+$}i) && user.login != 'current'
+                link_to(h(user.name(options[:format])), :controller => 'users', :action => 'show', :id => user.login.downcase)
+            else
+                link_to_user_without_login(user, options)
+            end
         end
 
     end

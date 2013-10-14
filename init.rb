@@ -20,6 +20,10 @@ Rails.configuration.to_prepare do
         ApplicationHelper.send(:include, WikingApplicationHelperPatch)
     end
 
+    unless User.included_modules.include?(WikingUserPatch)
+        User.send(:include, WikingUserPatch)
+    end
+
     unless WikiContent.included_modules.include?(WikingContentPatch)
         WikiContent.send(:include, WikingContentPatch)
     end
