@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require_dependency 'application_helper'
 
 module WikingApplicationHelperPatch
@@ -15,9 +17,15 @@ module WikingApplicationHelperPatch
 
             alias_method_chain :link_to_user,        :login
 
-            define_method :parse_wiking_conditions, instance_method(:parse_wiking_conditions)
+            define_method :parse_wiking_conditions, instance_method(:parse_wiking_conditions) # FIXME not sure why do we need this
+            define_method :parse_glyphs,            instance_method(:parse_glyphs)
             define_method :parse_footnotes,         instance_method(:parse_footnotes)
             define_method :update_mentions,         instance_method(:update_mentions)
+
+            define_method :inline_dashes,         instance_method(:inline_dashes)
+            define_method :inline_quotes,         instance_method(:inline_quotes)
+            define_method :inline_apostrophe,     instance_method(:inline_apostrophe)
+            define_method :inline_arrows,         instance_method(:inline_arrows)
         end
     end
 
@@ -106,6 +114,31 @@ module WikingApplicationHelperPatch
 
         end
 
+        HTMLATTRS = %r{(?:\s+[\w\d\-]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^"'>\s]+))?)*}
+
+        WIKING_REPLACEABLE_RE = %r{(<(/)?([\w\d]+)#{HTMLATTRS}\s*/?>)(.*?)(?=</?[\w\d]+#{HTMLATTRS}\s*/?>|$)}
+
+        def parse_glyphs(text, project, obj, attr, only_path, options)
+            codepre = 0
+            text.gsub!(WIKING_REPLACEABLE_RE) do |m|
+                tag, closure, tagname, content = $1, $2, $3, $4
+                if tagname =~ RedCloth3::OFFTAGS
+                    if closure
+                        codepre -= 1
+                        codepre = 0 if codepre < 0
+                    else
+                        codepre += 1
+                    end
+                end
+                if codepre.zero?
+                    [ :inline_dashes, :inline_quotes, :inline_apostrophe, :inline_arrows ].each do |inline_rule|
+                        send(inline_rule, content)
+                    end
+                end
+                tag + content
+            end
+        end
+
         WIKING_FOOTNOTE_RE = %r{([^\s\(,\-.])(!)?\(\(([^\)]*)\)\)(?=(?=[[:punct:]]\W)|,|\s|\]|<|$)}
 
         def parse_footnotes(text, project, obj, attr, only_path, options)
@@ -168,9 +201,11 @@ module WikingApplicationHelperPatch
         end
 
         def parse_headings_with_wiking(text, project, obj, attr, only_path, options)
+            parse_wiking_conditions(text, project, obj, attr, only_path, options)
+            parse_glyphs(text, project, obj, attr, only_path, options)
+
             parse_headings_without_wiking(text, project, obj, attr, only_path, options)
 
-            parse_wiking_conditions(text, project, obj, attr, only_path, options)
             parse_footnotes(text, project, obj, attr, only_path, options)
         end
 
@@ -260,7 +295,8 @@ module WikingApplicationHelperPatch
                             if user = User.find_by_id(oid)
                                 name = display || user.name(format)
                                 if user.active?
-                                    link = link_to(h(name), { :only_path => only_path, :controller => 'users', :action => 'show', :id => user.login.downcase },
+                                    user_id = user.login.match(%r{^[a-z0-9_\-.]+$}i) ? user.login.downcase : user
+                                    link = link_to(h(name), { :only_path => only_path, :controller => 'users', :action => 'show', :id => user_id },
                                                               :class => 'user')
                                 else
                                     link = h(name)
@@ -285,7 +321,8 @@ module WikingApplicationHelperPatch
                             if user = User.find_by_login(oname)
                                 name = display || user.name(format)
                                 if user.active?
-                                    link = link_to(h(name), { :only_path => only_path, :controller => 'users', :action => 'show', :id => user.login.downcase },
+                                    user_id = user.login.match(%r{^[a-z0-9_\-.]+$}i) ? user.login.downcase : user
+                                    link = link_to(h(name), { :only_path => only_path, :controller => 'users', :action => 'show', :id => user_id },
                                                               :class => 'user')
                                 else
                                     link = h(name)
@@ -312,6 +349,52 @@ module WikingApplicationHelperPatch
                 leading + (link || "#{project_prefix}#{prefix}#{option}#{sep}#{identifier}")
             end
 
+        end
+
+        def inline_dashes(text)
+            text.gsub!(%r{([^\w\-])(-{2,3})(?=[^\w\-]|$)}) do |match|
+                case $2
+                when '--'
+                    "#{$1}–"
+                else
+                    "#{$1}—"
+                end
+            end
+        end
+
+        WIKING_QUOTES_RE = %r{(?:(^|>|\s|[^\w"])(!)?"(?=\w|[^\w"]*")|(\w[^\w"\s]*|[^\w"\s]*)(!)?"(?=[^\w"\s]*(?:\s|<|$)))}
+
+        def inline_quotes(text)
+            text.gsub!(WIKING_QUOTES_RE) do |match|
+                leading, esc, closing = $1 || $3, $2 || $4, $3
+                glyph = ll(Setting.default_language, closing.nil? ? :glyph_left_quote : :glyph_right_quote)
+                if esc.nil?
+                    leading + glyph
+                else
+                    leading + '"'
+                end
+            end
+        end
+
+        def inline_apostrophe(text)
+            text.gsub!(%r{(\w)'}) do |match|
+                "#{$1}’"
+            end
+        end
+
+        WIKING_ARROWS = {
+            '<=>' => '⇔',
+            '<->' => '↔',
+            '<='  => '⇐',
+            '<-'  => '←',
+            '=>'  => '⇒',
+            '->'  => '→'
+        }
+
+        def inline_arrows(text)
+            WIKING_ARROWS.sort{ |a, b| b[0].length <=> a[0].length }.each do |code, entity|
+                text.gsub!(%r{#{code}}m, entity)
+            end
         end
 
         def link_to_user_with_login(user, options = {})

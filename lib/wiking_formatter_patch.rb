@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 require_dependency 'redmine/wiki_formatting/textile/formatter'
 
 module WikingFormatterPatch
@@ -13,10 +11,6 @@ module WikingFormatterPatch
             self::RULES << :block_wiking_blocks
             self::RULES << :inline_wiking_markers
             self::RULES << :inline_wiking_smileys
-            self::RULES << :inline_dashes
-           #self::RULES << :inline_quotes # FIXME use #pgl for all #inline_*
-            self::RULES << :inline_apostrophe
-            self::RULES << :inline_arrows
         end
     end
 
@@ -100,52 +94,6 @@ module WikingFormatterPatch
                         leading + smiley
                     end
                 end
-            end
-        end
-
-        def inline_dashes(text)
-            text.gsub!(%r{(\W)(-{2,3})(\W)}) do |match|
-                case $2
-                when '--'
-                    "#{$1}–#{$3}"
-                else
-                    "#{$1}—#{$3}"
-                end
-            end
-        end
-
-        WIKING_QUOTES_RE = %r{(?:(^|>|\s|[^\w"])(!)?"(?=\w|[^\w"]*")|(\w[^\w"\s]*|[^\w"\s]*)(!)?"(?=[^\w"\s]*(?:\s|<|$)))}
-
-        def inline_quotes(text)
-            text.gsub!(WIKING_QUOTES_RE) do |match|
-                leading, esc, closing = $1 || $3, $2 || $4, $3
-                glyph = ll(Setting.default_language, closing.nil? ? :glyph_left_quote : :glyph_right_quote)
-                if esc.nil?
-                    leading + glyph
-                else
-                    leading + '"'
-                end
-            end
-        end
-
-        def inline_apostrophe(text)
-            text.gsub!(%r{(\w)'}) do |match|
-                "#{$1}’"
-            end
-        end
-
-        WIKING_ARROWS = {
-            '<=>' => '⇔',
-            '<->' => '↔',
-            '<='  => '⇐',
-            '<-'  => '←',
-            '=>'  => '⇒',
-            '->'  => '→'
-        }
-
-        def inline_arrows(text)
-            WIKING_ARROWS.sort{ |a, b| b[0].length <=> a[0].length }.each do |code, entity|
-                text.gsub!(%r{#{code}}m, entity)
             end
         end
 
