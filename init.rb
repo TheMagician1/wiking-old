@@ -20,6 +20,16 @@ Rails.configuration.to_prepare do
         ApplicationHelper.send(:include, WikingApplicationHelperPatch)
     end
 
+    unless JournalsController.included_modules.include?(WikingLlControllerPatch)
+        JournalsController.send(:include, WikingLlControllerPatch)
+    end
+    unless MessagesController.included_modules.include?(WikingLlControllerPatch)
+        MessagesController.send(:include, WikingLlControllerPatch)
+    end
+    unless CommentsController.included_modules.include?(WikingCommentsControllerPatch)
+        CommentsController.send(:include, WikingCommentsControllerPatch)
+    end
+
     unless User.included_modules.include?(WikingUserPatch)
         User.send(:include, WikingUserPatch)
     end
