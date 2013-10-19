@@ -15,7 +15,21 @@ module WikingMailerPatch
 
     module InstanceMethods
 
-        # TODO
+        def mention(mention)
+            subject_prefix = mention.project ? "[#{mention.project.name}] " : ''
+
+            redmine_headers('Mentioning-Type' => mention.mentioning.class.name,
+                            'Mentioning-Id'   => mention.mentioning.id)
+            redmine_headers('Project'         => mention.project.identifier) if mention.project
+            message_id(mention)
+
+            @title = mention.title
+            @url   = mention.url
+            @user  = mention.mentioned
+
+            mail(:to      => mention.mentioned.mail, # FIXME array?
+                 :subject => subject_prefix + l(:mail_subject_you_mentioned, :locale =>  mention.mentioned.language))
+        end
 
     end
 
@@ -31,7 +45,7 @@ module WikingMailerPatch
             recipients(mention.mentioned.mail) # FIXME array?
             subject(subject_prefix + l(:mail_subject_you_mentioned, :locale =>  mention.mentioned.language))
             body(:title => mention.title,
-                 :url   => mention.url,
+                 :url   => mention.url, # FIXME url is rendered as #inspect
                  :user  => mention.mentioned)
 
             render_multipart('you_mentioned', body)

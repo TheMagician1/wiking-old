@@ -1,6 +1,6 @@
 require_dependency 'comment'
 
-module WikingCommentPatch
+module WikingCommentPatch # FIXME does not work on 1.4...
 
     def self.included(base)
         base.send(:include, InstanceMethods)

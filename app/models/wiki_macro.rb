@@ -27,7 +27,7 @@ class WikiMacro < ActiveRecord::Base
                 index = $3.to_i
                 (index > 0 && index <= args.size) ? self.escape(args[index-1], escape) : ''
             else
-                self.escape(text)
+                self.escape(text, escape)
             end
         end.html_safe
     end
