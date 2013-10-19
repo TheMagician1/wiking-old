@@ -7,6 +7,8 @@ en:
   label_custom_wiki_macro_plural: Custom Wiki macros
   label_custom_wiki_macro_new: New macro
 
+  notice_custom_macro_edit: Editing the macro remember, that it may be already used!
+
   text_custom_wiki_macro_name_info: Only lower case letters (a-z), numbers and underscores are allowed.
   text_custom_wiki_macro_desc_info: 'Wiki syntax is supported. Example:'
   text_custom_wiki_macro_desc_sample: Displays a list of all available macros, including description if available.

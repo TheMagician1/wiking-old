@@ -51,7 +51,7 @@ class WikiMacro < ActiveRecord::Base
                 named = {}
                 unnamed = []
                 args.each do |arg|
-                    if arg =~ %r{^([^{=}]+)=(?:(['"])([^\2]*)\2|(.*))$} # FIXME apostrophes seem to be replaced here
+                    if arg =~ %r{^([^{=}]+)=(?:(['"])([^\2]*)\2|(.*))$}
                         named[$1.downcase.to_sym] = $2 ? $3 : $4
                     else
                         arg.gsub!(%r{^(['"])(.*)\1$}, '\\2')
