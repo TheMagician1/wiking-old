@@ -98,6 +98,6 @@ unless defined? ChiliProject::Liquid::Tags
         end
     end
 
-    WikiMacro.register_all!
+    WikiMacro.register_all! if ActiveRecord::Base.connection.table_exists?(:wiki_macros)
 
 end

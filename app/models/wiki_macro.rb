@@ -17,7 +17,7 @@ class WikiMacro < ActiveRecord::Base
         "{{#{name}}}"
     end
 
-    def exec(args, params)
+    def exec(args, params, text)
         self.content.gsub(MACRO_ARGUMENT_RE) do |match|
             escape = $1
             if $2
@@ -27,7 +27,7 @@ class WikiMacro < ActiveRecord::Base
                 index = $3.to_i
                 (index > 0 && index <= args.size) ? self.escape(args[index-1], escape) : ''
             else
-                '' # TODO self.class.escape(text)
+                self.escape(text)
             end
         end
     end
@@ -47,10 +47,12 @@ class WikiMacro < ActiveRecord::Base
         macro_name = self.name.to_sym
         Redmine::WikiFormatting::Macros.register do
             desc macro_desc
-            macro macro_name do |obj, args| # TODO ..., text for Redmine > 1.4
+            macro macro_name do |*args|
                 named = {}
                 unnamed = []
-                args.each do |arg|
+                obj = args.shift
+                text = args.size > 1 ? args.pop : nil
+                args.shift.each do |arg|
                     if arg =~ %r{^([^{=}]+)=(?:(['"])([^\2]*)\2|(.*))$}
                         named[$1.downcase.to_sym] = $2 ? $3 : $4
                     else
@@ -58,15 +60,19 @@ class WikiMacro < ActiveRecord::Base
                         unnamed << arg
                     end
                 end
-                wiki_macro.reload.exec(unnamed, named) # TODO text, ...
+                wiki_macro.reload.exec(unnamed, named, text)
             end
         end
     end
 
     def update_description!
-        available_macros = Redmine::WikiFormatting::Macros.class_variable_get(:@@available_macros)
-        available_macros[name.to_sym] = description
-        Redmine::WikiFormatting::Macros.class_variable_set(:@@available_macros, available_macros)
+        if Redmine::WikiFormatting::Macros.respond_to?(:available_macros)
+            Redmine::WikiFormatting::Macros.available_macros[name.to_sym][:desc] = description
+        else
+            available_macros = Redmine::WikiFormatting::Macros.class_variable_get(:@@available_macros)
+            available_macros[name.to_sym] = description
+            Redmine::WikiFormatting::Macros.class_variable_set(:@@available_macros, available_macros)
+        end
     end
 
     def unregister!
@@ -74,9 +80,13 @@ class WikiMacro < ActiveRecord::Base
     end
 
     def self.unregister!(name)
-        available_macros = Redmine::WikiFormatting::Macros.class_variable_get(:@@available_macros)
-        available_macros.delete(name.to_sym)
-        Redmine::WikiFormatting::Macros.class_variable_set(:@@available_macros, available_macros)
+        if Redmine::WikiFormatting::Macros.respond_to?(:available_macros)
+            Redmine::WikiFormatting::Macros.available_macros.delete(name.to_sym)
+        else
+            available_macros = Redmine::WikiFormatting::Macros.class_variable_get(:@@available_macros)
+            available_macros.delete(name.to_sym)
+            Redmine::WikiFormatting::Macros.class_variable_set(:@@available_macros, available_macros)
+        end
         Redmine::WikiFormatting::Macros::Definitions.send(:remove_method, "macro_#{name.downcase}")
     end
 
@@ -90,7 +100,7 @@ private
 
     def validate_name
         if name_changed?
-            available_macros = Redmine::WikiFormatting::Macros.class_variable_get(:@@available_macros)
+            available_macros = Redmine::WikiFormatting::Macros.class_variable_get(:@@available_macros) # not needed for Redmine 2.x
             if available_macros.has_key?(name.to_sym) ||
                 Redmine::WikiFormatting::Macros::Definitions.method_defined?("macro_#{name.downcase}")
                 errors.add(:name, :taken)

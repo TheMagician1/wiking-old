@@ -7,25 +7,37 @@ module WikingMacrosDefinitionsPatch
         base.class_eval do
             unloadable
 
-            alias_method_chain :exec_macro, :custom
+            alias_method_chain :macro_exists?, :custom if method_defined?(:macro_exists?)
+            alias_method_chain :exec_macro,    :custom
         end
     end
 
     module InstanceMethods
 
-        def exec_macro_with_custom(name, obj, args)
-            method_name = "macro_#{name.downcase}"
+        def macro_exists_with_custom?(name)
+            exists = macro_exists_without_custom?(name)
+            unless exists
+                if macro = WikiMacro.find_by_name(name)
+                    macro.register!
+                    exists = true
+                end
+            end
+            exists
+        end
+
+        def exec_macro_with_custom(*args)
+            method_name = "macro_#{args[0].downcase}"
             unless respond_to?(method_name)
-                macro = WikiMacro.find_by_name(name)
+                macro = WikiMacro.find_by_name(args[0])
                 macro.register! if macro
             end
             if method_name == 'macro_macro_list'
-                available_macros = Redmine::WikiFormatting::Macros.class_variable_get(:@@available_macros)
-                WikiMacro.all.each do |macro| # FIXME what about renamed/deleted macros?
+                available_macros = Redmine::WikiFormatting::Macros.class_variable_get(:@@available_macros) # not needed for Redmine 2.x
+                WikiMacro.all.each do |macro|
                     macro.register! unless available_macros.has_key?(macro.name.to_sym)
                 end
             end
-            exec_macro_without_custom(name, obj, args)
+            exec_macro_without_custom(*args)
         end
 
     end
