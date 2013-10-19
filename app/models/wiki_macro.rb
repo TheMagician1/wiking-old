@@ -17,7 +17,7 @@ class WikiMacro < ActiveRecord::Base
         "{{#{name}}}"
     end
 
-    def exec(args, params, text)
+    def exec(args, text, params)
         self.content.gsub(MACRO_ARGUMENT_RE) do |match|
             escape = $1
             if $2
@@ -29,7 +29,7 @@ class WikiMacro < ActiveRecord::Base
             else
                 self.escape(text)
             end
-        end
+        end.html_safe
     end
 
     def escape(value, type)
@@ -42,25 +42,22 @@ class WikiMacro < ActiveRecord::Base
     end
 
     def register!
-        wiki_macro = self
-        macro_desc = self.description
-        macro_name = self.name.to_sym
+        wiki_macro  = self
+        macro_desc  = self.description
+        macro_name  = self.name.to_sym
+        hello_macro = Redmine::WikiFormatting::Macros::Definitions.instance_method(:macro_hello_world)
         Redmine::WikiFormatting::Macros.register do
             desc macro_desc
-            macro macro_name do |*args|
-                named = {}
-                unnamed = []
-                obj = args.shift
-                text = args.size > 1 ? args.pop : nil
-                args.shift.each do |arg|
-                    if arg =~ %r{^([^{=}]+)=(?:(['"])([^\2]*)\2|(.*))$}
-                        named[$1.downcase.to_sym] = $2 ? $3 : $4
-                    else
-                        arg.gsub!(%r{^(['"])(.*)\1$}, '\\2')
-                        unnamed << arg
-                    end
+            if hello_macro.arity == 3
+                macro macro_name do |obj, args, text|
+                    unnamed, named = WikiMacro.extract_macro_arguments(args)
+                    wiki_macro.reload.exec(unnamed, text, named)
                 end
-                wiki_macro.reload.exec(unnamed, named, text)
+            else
+                macro macro_name do |obj, args|
+                    unnamed, named = WikiMacro.extract_macro_arguments(args)
+                    wiki_macro.reload.exec(unnamed, nil, named)
+                end
             end
         end
     end
@@ -77,6 +74,20 @@ class WikiMacro < ActiveRecord::Base
 
     def unregister!
         self.class.unregister!(self.name)
+    end
+
+    def self.extract_macro_arguments(args)
+        named = {}
+        unnamed = []
+        args.each do |arg|
+            if arg =~ %r{^([^{=}]+)=(?:(['"])([^\2]*)\2|(.*))$}
+                named[$1.downcase.to_sym] = $2 ? $3 : $4
+            else
+                arg.gsub!(%r{^(['"])(.*)\1$}, '\\2')
+                unnamed << arg
+            end
+        end
+        [ unnamed, named ]
     end
 
     def self.unregister!(name)
