@@ -24,11 +24,12 @@ module WikingMailerPatch
             message_id(mention)
 
             @title = mention.title
-            @url   = mention.url
+            @url   = url_for(mention.url)
             @user  = mention.mentioned
 
-            mail(:to      => mention.mentioned.mail, # FIXME array?
-                 :subject => subject_prefix + l(:mail_subject_you_mentioned, :locale =>  mention.mentioned.language))
+            mail(:to            => mention.mentioned.mail,
+                 :subject       => subject_prefix + l(:mail_subject_you_mentioned, :locale =>  mention.mentioned.language),
+                 :template_name => 'you_mentioned')
         end
 
     end
@@ -42,10 +43,10 @@ module WikingMailerPatch
                             'Mentioning-Id'   => mention.mentioning.id)
             redmine_headers('Project'         => mention.project.identifier) if mention.project
             message_id(mention)
-            recipients(mention.mentioned.mail) # FIXME array?
+            recipients(mention.mentioned.mail)
             subject(subject_prefix + l(:mail_subject_you_mentioned, :locale =>  mention.mentioned.language))
             body(:title => mention.title,
-                 :url   => mention.url, # FIXME url is rendered as #inspect
+                 :url   => url_for(mention.url),
                  :user  => mention.mentioned)
 
             render_multipart('you_mentioned', body)
