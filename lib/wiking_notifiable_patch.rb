@@ -1,5 +1,3 @@
-require_dependency 'redmine/notifiable'
-
 module WikingNotifiablePatch
 
     def self.included(base)

@@ -295,7 +295,7 @@ module WikingApplicationHelperPatch
                             if user = User.find_by_id(oid)
                                 name = display || user.name(format)
                                 if user.active?
-                                    user_id = user.login.match(%r{^[a-z0-9_\-.]+$}i) ? user.login.downcase : user
+                                    user_id = user.login.match(%r{^[a-z0-9_\-]+$}i) ? user.login.downcase : user
                                     link = link_to(h(name), { :only_path => only_path, :controller => 'users', :action => 'show', :id => user_id },
                                                               :class => 'user')
                                 else
@@ -321,7 +321,7 @@ module WikingApplicationHelperPatch
                             if user = User.find_by_login(oname)
                                 name = display || user.name(format)
                                 if user.active?
-                                    user_id = user.login.match(%r{^[a-z0-9_\-.]+$}i) ? user.login.downcase : user
+                                    user_id = user.login.match(%r{^[a-z0-9_\-]+$}i) ? user.login.downcase : user
                                     link = link_to(h(name), { :only_path => only_path, :controller => 'users', :action => 'show', :id => user_id },
                                                               :class => 'user')
                                 else
@@ -398,7 +398,7 @@ module WikingApplicationHelperPatch
         end
 
         def link_to_user_with_login(user, options = {})
-            if user.is_a?(User) && user.active? && user.login.match(%r{^[a-z0-9_\-.]+$}i) && user.login != 'current'
+            if user.is_a?(User) && user.active? && user.login.match(%r{^[a-z0-9_\-]+$}i) && user.login != 'current'
                 link_to(h(user.name(options[:format])), :controller => 'users', :action => 'show', :id => user.login.downcase)
             else
                 link_to_user_without_login(user, options)
