@@ -94,7 +94,7 @@ class Mention < ActiveRecord::Base
         connection.select_rows("SELECT mentioned_id " +
                                "FROM #{Mention.table_name} " +
                                "WHERE mentioning_type = '#{object.class.name}' AND mentioning_id = #{object.id} " +
-                               "ORDER BY mentioned_id").flatten.join(',')
+                               "ORDER BY mentioned_id").flatten.uniq.join(',')
     end
 
 end

@@ -15,17 +15,17 @@ module WikingApplicationHelperPatch
             alias_method_chain :parse_wiki_links,    :wiking
             alias_method_chain :parse_redmine_links, :wiking
 
-            alias_method_chain :link_to_user,        :login
+            alias_method_chain :link_to_user, :login
 
             define_method :parse_wiking_conditions, instance_method(:parse_wiking_conditions) # FIXME not sure why do we need this
             define_method :parse_glyphs,            instance_method(:parse_glyphs)
             define_method :parse_footnotes,         instance_method(:parse_footnotes)
             define_method :update_mentions,         instance_method(:update_mentions)
 
-            define_method :inline_dashes,         instance_method(:inline_dashes)
-            define_method :inline_quotes,         instance_method(:inline_quotes)
-            define_method :inline_apostrophe,     instance_method(:inline_apostrophe)
-            define_method :inline_arrows,         instance_method(:inline_arrows)
+            define_method :inline_dashes,     instance_method(:inline_dashes)
+            define_method :inline_quotes,     instance_method(:inline_quotes)
+            define_method :inline_apostrophe, instance_method(:inline_apostrophe)
+            define_method :inline_arrows,     instance_method(:inline_arrows)
         end
     end
 

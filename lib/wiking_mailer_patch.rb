@@ -28,8 +28,10 @@ module WikingMailerPatch
             @user  = mention.mentioned
 
             mail(:to            => mention.mentioned.mail,
-                 :subject       => subject_prefix + l(:mail_subject_you_mentioned, :locale =>  mention.mentioned.language),
-                 :template_name => 'you_mentioned')
+                 :subject       => subject_prefix + l(:mail_subject_you_mentioned, :locale =>  mention.mentioned.language)) do |format|
+                format.html { render('you_mentioned') }
+                format.text { render('you_mentioned') }
+            end
         end
 
     end
