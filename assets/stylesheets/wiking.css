@@ -114,6 +114,11 @@ span.marker-experimental.marker-right {
     width: 110px;
     height: 28px;
 }
+span.wiking.marker-beta {
+    background-image: url(../images/beta.png);
+    width: 32px;
+    height: 32px;
+}
 span.wiking.smiley {
     background-repeat: no-repeat;
     display: inline-block;
