@@ -49,11 +49,17 @@ module WikingWikiHelperPatch
 
             if defined? ChiliProject
                 url = url_for(:controller => 'help', :action => 'wiki_syntax')
+            elsif File.exists?(File.join(Rails.root, 'public/help', current_language.to_s.downcase, 'wiki_syntax.html'))
+                url = "#{Redmine::Utils.relative_url_root}/help/#{current_language.to_s.downcase}/wiki_syntax.html"
             else
                 url = "#{Redmine::Utils.relative_url_root}/help/wiki_syntax.html"
             end
 
-            wiking_url = "#{Redmine::Utils.relative_url_root}/plugin_assets/wiking/help/wiki_syntax.html"
+            if File.exists?(File.join(Rails.root, 'plugins/wiking/assets/help/', current_language.to_s.downcase, 'wiki_syntax.html')) # TODO ru/uk
+                wiking_url = "#{Redmine::Utils.relative_url_root}/plugin_assets/wiking/help/#{current_language.to_s.downcase}/wiki_syntax.html"
+            else
+                wiking_url = "#{Redmine::Utils.relative_url_root}/plugin_assets/wiking/help/en/wiki_syntax.html"
+            end
 
             js_code = "var wikiToolbar = new jsToolBar(document.getElementById('#{field_id}'));"
 
