@@ -91,7 +91,7 @@ module WikingFormatterPatch
                 text.gsub!(%r{(\s|^)(!)?(#{regexp})(?=\W|$)}m) do |match|
                     leading, esc, smiley = $1, $2, $3
                     if esc.nil?
-                        leading + "<span title=\"#{smiley}\" class=\"wiking smiley smiley-#{name}\"></span>"
+                        leading + "<span class=\"wiking smiley smiley-#{name}\" title=\"#{smiley}\"></span>"
                     else
                         leading + smiley
                     end

@@ -17,7 +17,7 @@ module WikingApplicationHelperPatch
 
             alias_method_chain :link_to_user, :login
 
-            define_method :parse_wiking_conditions, instance_method(:parse_wiking_conditions) # FIXME not sure why do we need this
+            define_method :parse_wiking_conditions, instance_method(:parse_wiking_conditions)
             define_method :parse_glyphs,            instance_method(:parse_glyphs)
             define_method :parse_footnotes,         instance_method(:parse_footnotes)
             define_method :update_mentions,         instance_method(:update_mentions)

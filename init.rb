@@ -20,6 +20,10 @@ Rails.configuration.to_prepare do
         ApplicationHelper.send(:include, WikingApplicationHelperPatch)
     end
 
+    unless Redmine::Export::PDF::ITCPDF.included_modules.include?(WikingPDFPatch)
+        Redmine::Export::PDF::ITCPDF.send(:include, WikingPDFPatch)
+    end
+
     unless JournalsController.included_modules.include?(WikingLlControllerPatch)
         JournalsController.send(:include, WikingLlControllerPatch)
     end
