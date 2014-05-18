@@ -81,7 +81,9 @@ module WikingFormatterPatch
             'rock'        => 'B-?\)',                  # B)
             'rose'        => '@[)\}][-\\/\',;()>\}]*', # @}->-
             'exclamation' => '[\[(]![\])]',            # (!)
-            'question'    => '[\[(]\?[\])]'            # (?)
+            'question'    => '[\[(]\?[\])]',           # (?)
+            'success'     => '[\[(]v[\])]',            # (v)
+            'failure'     => '[\[(]x[\])]'             # (x)
         }
 
         def inline_wiking_smileys(text)
