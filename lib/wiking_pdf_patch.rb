@@ -3,11 +3,19 @@ require_dependency 'redmine/export/pdf'
 module WikingPDFPatch
 
     def self.included(base)
-        base.send(:include, InstanceMethods)
+        if base.method_defined?(:formatted_text)
+            base.send(:include, InstanceMethods)
+        else
+            base.send(:include, Redmine1InstanceMethods)
+        end
         base.class_eval do
             unloadable
 
-            alias_method_chain :formatted_text, :wiking
+            if method_defined?(:formatted_text)
+                alias_method_chain :formatted_text, :wiking
+            else
+                alias_method_chain :fix_text_encoding, :wiking
+            end
         end
     end
 
@@ -27,6 +35,24 @@ module WikingPDFPatch
             end
 
             html
+        end
+
+    end
+
+    module Redmine1InstanceMethods
+
+        def fix_text_encoding_with_wiking(text)
+            text.gsub!(%r{<span class="wiking (marker|smiley) [^"]+" title="([^"]+)"></span>}) do |match|
+                type, title = $1, $2
+                case type
+                when 'marker'
+                    '{' + title + '}'
+                else
+                    title
+                end
+            end
+
+            fix_text_encoding_with_wiking(text)
         end
 
     end
