@@ -32,7 +32,11 @@ module WikingMacrosDefinitionsPatch
                 macro.register! if macro
             end
             if method_name == 'macro_macro_list'
-                available_macros = Redmine::WikiFormatting::Macros.class_variable_get(:@@available_macros) # not needed for Redmine 2.x
+                if Redmine::WikiFormatting::Macros.respond_to?(:available_macros)
+                    available_macros = Redmine::WikiFormatting::Macros.available_macros
+                else
+                    available_macros = Redmine::WikiFormatting::Macros.send(:class_variable_get, :@@available_macros)
+                end
                 WikiMacro.all.each do |macro|
                     macro.register! unless available_macros.has_key?(macro.name.to_sym)
                 end

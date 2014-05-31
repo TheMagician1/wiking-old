@@ -52,7 +52,7 @@ module WikingPDFPatch
                 end
             end
 
-            fix_text_encoding_with_wiking(text)
+            fix_text_encoding_without_wiking(text)
         end
 
     end

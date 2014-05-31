@@ -66,9 +66,9 @@ class WikiMacro < ActiveRecord::Base
         if Redmine::WikiFormatting::Macros.respond_to?(:available_macros)
             Redmine::WikiFormatting::Macros.available_macros[name.to_sym][:desc] = description
         else
-            available_macros = Redmine::WikiFormatting::Macros.class_variable_get(:@@available_macros)
+            available_macros = Redmine::WikiFormatting::Macros.send(:class_variable_get, :@@available_macros)
             available_macros[name.to_sym] = description
-            Redmine::WikiFormatting::Macros.class_variable_set(:@@available_macros, available_macros)
+            Redmine::WikiFormatting::Macros.send(:class_variable_set, :@@available_macros, available_macros)
         end
     end
 
@@ -94,9 +94,9 @@ class WikiMacro < ActiveRecord::Base
         if Redmine::WikiFormatting::Macros.respond_to?(:available_macros)
             Redmine::WikiFormatting::Macros.available_macros.delete(name.to_sym)
         else
-            available_macros = Redmine::WikiFormatting::Macros.class_variable_get(:@@available_macros)
+            available_macros = Redmine::WikiFormatting::Macros.send(:class_variable_get, :@@available_macros)
             available_macros.delete(name.to_sym)
-            Redmine::WikiFormatting::Macros.class_variable_set(:@@available_macros, available_macros)
+            Redmine::WikiFormatting::Macros.send(:class_variable_set, :@@available_macros, available_macros)
         end
         Redmine::WikiFormatting::Macros::Definitions.send(:remove_method, "macro_#{name.downcase}")
     end
@@ -111,7 +111,11 @@ private
 
     def validate_name
         if name_changed?
-            available_macros = Redmine::WikiFormatting::Macros.class_variable_get(:@@available_macros) # not needed for Redmine 2.x
+            if Redmine::WikiFormatting::Macros.respond_to?(:available_macros)
+                available_macros = Redmine::WikiFormatting::Macros.available_macros
+            else
+                available_macros = Redmine::WikiFormatting::Macros.send(:class_variable_get, :@@available_macros)
+            end
             if available_macros.has_key?(name.to_sym) ||
                 Redmine::WikiFormatting::Macros::Definitions.method_defined?("macro_#{name.downcase}")
                 errors.add(:name, :taken)
