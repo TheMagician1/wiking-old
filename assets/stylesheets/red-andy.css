@@ -65,6 +65,7 @@ div.footnotes {
     border-top: 1px solid #cf973d;
     margin-top: 2em;
     padding-top: 0.25em;
+    margin-bottom: 1em;
 }
 div.footnotes p.footnote > sup {
     vertical-align: baseline;

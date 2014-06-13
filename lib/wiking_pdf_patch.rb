@@ -50,7 +50,7 @@ module WikingPDFPatch
                 else
                     title
                 end
-            end
+            end unless text.nil?
 
             fix_text_encoding_without_wiking(text)
         end
