@@ -49,10 +49,10 @@ module WikingWikiHelperPatch
 
             if defined? ChiliProject
                 url = url_for(:controller => 'help', :action => 'wiki_syntax')
-            elsif File.exists?(File.join(Rails.root, 'public/help', current_language.to_s.downcase, 'wiki_syntax.html'))
-                url = "#{Redmine::Utils.relative_url_root}/help/#{current_language.to_s.downcase}/wiki_syntax.html"
+            elsif File.exists?(File.join(Rails.root, 'public/help', current_language.to_s.downcase, 'wiki_syntax_textile.html'))
+                url = "#{Redmine::Utils.relative_url_root}/help/#{current_language.to_s.downcase}/wiki_syntax_textile.html"
             else
-                url = "#{Redmine::Utils.relative_url_root}/help/wiki_syntax.html"
+                url = "#{Redmine::Utils.relative_url_root}/help/wiki_syntax_textile.html"
             end
 
             if File.exists?(File.join(Rails.root, 'plugins/wiking/assets/help/', current_language.to_s.downcase, 'wiki_syntax.html'))
