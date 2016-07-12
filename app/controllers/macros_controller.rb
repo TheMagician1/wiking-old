@@ -6,7 +6,7 @@ class MacrosController < ApplicationController
     before_filter :find_macro, :only => [ :edit, :update, :destroy ]
 
     def index
-        @macros = WikiMacro.all(:order => :name)
+      @macros = WikiMacro.all.sort_by(&:name)
     end
 
     def new
@@ -14,7 +14,7 @@ class MacrosController < ApplicationController
     end
 
     def create
-        @macro = WikiMacro.new(params[:wiki_macro])
+        @macro = WikiMacro.new(user_params)
         if request.post? && @macro.save
             flash[:notice] = l(:notice_successful_create)
             @macro.register!
@@ -24,13 +24,17 @@ class MacrosController < ApplicationController
         end
     end
 
+    def user_params
+      params.require(:wiki_macro).permit(:name, :description, :content, :commit)
+    end
+
     def edit
     end
 
     def update
-        if request.put?
+        if request.put? or request.patch?
             old_name = @macro.name
-            @macro.attributes = params[:wiki_macro]
+            @macro.attributes = user_params
             name_changed = @macro.name_changed?
             desc_changed = @macro.description_changed?
             if @macro.save
