@@ -13,14 +13,21 @@ span.wiking-hidden {
     opacity: 0.25;
     filter: alpha(opacity=25);
 }
+div.wiking {
+	background-repeat: no-repeat;
+}
 div.wiking.flash {
-    border-width: 1px;
     background-position: 6px 3px;
     width: auto;
     overflow-x: auto;
     overflow-y: hidden;
-    font-size: 10pt;
+    font-size: 1.1em;
+    padding: 6px 4px 6px 30px;
+    margin-bottom: 12px;
+    border: 1px solid;
+    border-radius: 3px
 }
+
 div.wiking.warning {
     background-image: url(../images/warning.png);
     color: #863D09;
